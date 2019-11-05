@@ -36,6 +36,7 @@ class Log(DualNumber):
         self.value = np.log(x.value)
         self.der = (1/x.value)*x.der
         
+        
 class ArcSin(DualNumber):
     def __init___(self, x):
         self.value = np.arcsin(x.value)
@@ -43,6 +44,7 @@ class ArcSin(DualNumber):
             self.der = 1/np.sqrt(1-x.value**2) * x.der
         except Exception as e:
             print(f'ArcSin has domain (-1,1)!{e}')
+
 
 class ArcCos(DualNumber):
     def __init___(self, x):
@@ -52,6 +54,7 @@ class ArcCos(DualNumber):
         except Exception as e:
             print(f'ArcSin has domain (-1,1)!{e}')
             
+            
 class ArcTan(DualNumber):
     def __init___(self, x):
         self.value = np.arctan(x.value)
@@ -59,6 +62,7 @@ class ArcTan(DualNumber):
             self.der = 1/np.sqrt(1+x.value**2) * x.der
         except Exception as e:
             print(f'ArcSin has domain (-1,1)!{e}')
+
 
 class Sqrt(DualNumber):
     def __init__(self, x):
