@@ -49,22 +49,23 @@ class ArcSin(DualNumber):
 class ArcCos(DualNumber):
     def __init___(self, x):
         self.value = np.arccos(x.value)
-        try:
-            self.der = -1/np.sqrt(1-x.value**2) * x.der
-        except Exception as e:
-            print(f'ArcSin has domain (-1,1)!{e}')
+        assert abs(x.value) <= 1
+        self.der = -1/np.sqrt(1-x.value**2) * x.der
+
             
             
 class ArcTan(DualNumber):
     def __init___(self, x):
         self.value = np.arctan(x.value)
-        try:
-            self.der = 1/np.sqrt(1+x.value**2) * x.der
-        except Exception as e:
-            print(f'ArcSin has domain (-1,1)!{e}')
+        self.der = 1/np.sqrt(1+x.value**2) * x.der
 
 
 class Sqrt(DualNumber):
     def __init__(self, x):
         self.value = np.sqrt(x.value)
         self.der = 1/(2*np.sqrt(x.value)) * x.der
+        
+def data_tyoe_check():
+    # TODO
+    pass
+    
