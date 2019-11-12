@@ -26,6 +26,12 @@ class DualNumber():
 
     def der(self):
         return self.der
+    
+    def __repr__(self):
+        print('Derivative: {0:5f}\n'.format(self.der) + 'Value: {0:.2f}'.format(self.val))
+        
+    def __str__(self):
+        return('Derivative: {0:.2f}\n'.format(self.der) + 'Value: {0:.2f}'.format(self.val))
 
 # Overloading arithmetic operators
 
