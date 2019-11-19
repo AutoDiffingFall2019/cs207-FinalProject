@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from DualNumber import DualNumber
-from ElementaryFunctions import *
+from ElementaryFunction2 import *
 
 a = DualNumber(5)
 

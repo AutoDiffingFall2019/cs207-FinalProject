@@ -7,7 +7,7 @@ Created on Thu Nov  7 13:20:32 2019
 """
 
 import numpy as np
-
+import doctest
 
 class DualNumber():
     '''
@@ -18,14 +18,16 @@ class DualNumber():
         print(type(real))
         assert (isinstance(real, int) or isinstance(real, float) or isinstance(real, DualNumber)), "Check the type of real!"
         #assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
-        self.val = real
-        self.der = dual
+        self._val = real
+        self._der = dual
 
+    @property
     def val(self):
-        return self.val
-
+        return self._val
+    
+    @property
     def der(self):
-        return self.der
+        return self._der
     
     def __repr__(self):
         print('Derivative: {0:5f}\n'.format(self.der) + 'Value: {0:.2f}'.format(self.val))
@@ -88,7 +90,7 @@ class DualNumber():
     def __truediv__(self, other):
         try:
             val2 = self.val / other.val
-            der2 = (self.der * other.val - self.val*other.der)/(self.val*self.val)
+            der2 = (-self.val * other.der + self.der*other.val)/(other.val*other.val)
             return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
@@ -99,7 +101,7 @@ class DualNumber():
     def __rtruediv__(self, other):
         try:
             val2 = other.val / self.val
-            der2 = (other.der * self.val - other.val*self.der)/(other.val*other.val)
+            der2 = (other.der * self.val - other.val*self.der)/(self.val*self.val)
             return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
@@ -143,7 +145,10 @@ class DualNumber():
 
     def __abs__(self):
         val2 = abs(self.val)
-        der2 = abs(self.der)
+        if self.val >= 0:
+            der2 = abs(self.der)
+        else:
+            der2 = self.der
         return DualNumber(val2, der2)
 
     def __round__(self, n=None):
