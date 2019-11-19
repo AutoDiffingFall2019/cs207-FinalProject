@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 """
 Created on Thu Nov  7 13:20:32 2019
@@ -64,11 +64,15 @@ class DualNumber():
     def der(self):
         return self._der
     
+    @property
+    def jacobian(self):
+        return self._der
+    
     def __repr__(self):
-        print('Derivative: {0:5f}\n'.format(self.der) + 'Value: {0:.2f}'.format(self.val))
+        return 'Derivative: {0:.2f}'.format(self.der) + '\n' + 'Value: {0:.2f}'.format(self.val)
         
     def __str__(self):
-        return('Derivative: {0:.2f}\n'.format(self.der) + 'Value: {0:.2f}'.format(self.val))
+        return('Derivative: {0:.2f}'.format(self.der) + '\n' + 'Value: {0:.2f}'.format(self.val))
 
 # Overloading arithmetic operators
 
@@ -269,3 +273,4 @@ if __name__ =="__main__":
     # print(f.val,f.der)
     import doctest
     doctest.testmod()
+    

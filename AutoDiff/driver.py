@@ -1,3 +1,4 @@
+#!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
 #!/usr/bin/env python3
@@ -7,7 +8,6 @@ Root_Finding Algorithm
 Created on Thu Nov 14 13:56:17 2019
 """
 
-import numpy as np
 from DualNumber import DualNumber
 import ElementaryFunctions as EF
 

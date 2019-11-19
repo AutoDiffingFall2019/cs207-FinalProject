@@ -1,3 +1,4 @@
+#!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
 from DualNumber import DualNumber
@@ -24,7 +25,7 @@ def Tan(x):
     if data_type_check(x) == 0:
         return DualNumber(np.tan(x._val),(1+np.tan(x._val)*np.tan(x._val))*x._der)
     else:
-        return DualNumber(np.tan(x._val),0)
+        return DualNumber(np.tan(x),0)
 
 
 def Cos(x):
@@ -127,6 +128,7 @@ def data_type_check(x):
            return 1 # returns 1 if x is real
        except:
            raise AttributeError('Input must be dual number or real number!')
+
 
 if __name__ =="__main__":
     import doctest
