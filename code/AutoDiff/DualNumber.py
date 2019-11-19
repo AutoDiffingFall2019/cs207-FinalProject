@@ -43,10 +43,12 @@ class DualNumber():
         #assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real
         self._der = dual
-
+    
+    @property
     def val(self):
         return self._val
-
+    
+    @property
     def der(self):
         return self._der
 
