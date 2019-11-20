@@ -8,8 +8,8 @@ Root_Finding Algorithm
 Created on Thu Nov 14 13:56:17 2019
 """
 
-from DualNumber import DualNumber
-import ElementaryFunctions as EF
+from AD.DualNumber import DualNumber
+import AD.ElementaryFunctions as EF
 
 """
 Demo code to find root of an arbitrary function based on our AD framework
