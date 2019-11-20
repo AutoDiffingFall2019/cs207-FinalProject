@@ -131,18 +131,18 @@ def test_jacobian():
     assert x.jacobian == 1
 
 
-# test_overload_add()
-# test_overload_add_types()
-# test_overload_multiply()
-# test_overload_multiply_types()
-# test_overload_sub()
-# test_overload_sub_types()
-# test_overload_truediv()
-# test_overload_truediv_types()
-# test_overload_pos()
-# test_overload_neg()
-# test_overload_abs()
-# test_overload_round()
+test_overload_add()
+test_overload_add_types()
+test_overload_multiply()
+test_overload_multiply_types()
+test_overload_sub()
+test_overload_sub_types()
+test_overload_truediv()
+test_overload_truediv_types()
+test_overload_pos()
+test_overload_neg()
+test_overload_abs()
+test_overload_round()
 
 
 def test_sin():
