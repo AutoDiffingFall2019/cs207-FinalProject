@@ -8,3 +8,4 @@ script:
     - python -m pytest --doctest-modules --cov=. --cov-report term-missing
 after_success:
     - coveralls
+    - codecov
