@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/AutoDiffingFall2019/cs207-FinalProject.svg?branch=master)](https://travis-ci.org/AutoDiffingFall2019/cs207-FinalProject)
+[![Build Status](https://travis-ci.org/AutoDiffingFall2019/cs207-FinalProject.svg?branch=master)](https://travis-ci.org/AutoDiffingFall2019/cs207-FinalProject.svg?branch=master)
 
 [![Coverage Status](https://codecov.io/gh/AutoDiffingFall2019/cs207-FinalProject/branch/master/graph/badge.svg)](https://codecov.io/gh/AutoDiffingFall2019/cs207-FinalProject)
 
