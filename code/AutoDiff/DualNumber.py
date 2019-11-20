@@ -15,7 +15,6 @@ class DualNumber():
     '''
 
     def __init__(self, real, dual=1):
-        print(type(real))
         assert (isinstance(real, int) or isinstance(real, float) or isinstance(real, DualNumber)), "Check the type of real!"
         #assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real
