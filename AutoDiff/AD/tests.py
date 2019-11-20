@@ -1,8 +1,8 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber import DualNumber
-import ElementaryFunctions as EF
+from AD.DualNumber import DualNumber
+import AD.ElementaryFunctions as EF
 import numpy as np
 import pytest
 
