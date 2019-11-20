@@ -1,8 +1,8 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber import DualNumber
-import ElementaryFunctions as EF
+from AD.DualNumber import DualNumber
+import AD.ElementaryFunctions as EF
 import numpy as np
 import pytest
 
@@ -131,18 +131,6 @@ def test_jacobian():
     assert x.jacobian == 1
 
 
-# test_overload_add()
-# test_overload_add_types()
-# test_overload_multiply()
-# test_overload_multiply_types()
-# test_overload_sub()
-# test_overload_sub_types()
-# test_overload_truediv()
-# test_overload_truediv_types()
-# test_overload_pos()
-# test_overload_neg()
-# test_overload_abs()
-# test_overload_round()
 
 
 def test_sin():
@@ -219,5 +207,28 @@ def test_data_type_check():
     
     
     
-        
-
+test_overload_add()
+test_overload_add_types()
+test_overload_multiply()
+test_overload_multiply_types()
+test_overload_sub()
+test_overload_sub_types()
+test_overload_truediv()
+test_overload_truediv_types()
+test_overload_pos()
+test_overload_neg()
+test_overload_abs()
+test_overload_round()
+test_repr()
+test_str()
+test_jacobian()
+test_sin()      
+test_cos()
+test_exp()
+test_Power()
+test_Log()
+test_ArcSin()
+test_ArcCos()
+test_ArcTan()
+test_Sqrt()
+test_data_type_check()
