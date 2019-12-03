@@ -66,20 +66,20 @@ def Exp(x):
     else:
         return DualNumber(np.exp(x),0)
 
-#def Power(x,n):
-#    '''
-#    >>> print(Power(DualNumber(5,1),2))
-#    Derivative: 10.00
-#    Value: 25.00
-#    '''
-#    if data_type_check(x) == 0:
-#        if x._rev:
-#            z=DualNumber(x._val**n,Reverse=True)
-#            x.children.append(((n*(x._val**(n-1)),z))
-#            return z
-#        return DualNumber(x._val**n,n*(x._val**(n-1))*x._der)
-#    else:
-#        return DualNumber(x**n,0)
+def Power(x,n):
+    '''
+    >>> print(Power(DualNumber(5,1),2))
+    Derivative: 10.00
+    Value: 25.00
+    '''
+    if data_type_check(x) == 0:
+        if x._rev:
+            z=DualNumber(x._val**n,Reverse=True)
+            x.children.append(((n*(x._val**(n-1)),z)))
+            return z
+        return DualNumber(x._val**n,n*(x._val**(n-1))*x._der)
+    else:
+        return DualNumber(x**n,0)
 
 def Log(x):
     '''
@@ -150,7 +150,7 @@ def Sqrt(x):
     Value: 3.00
     '''
     if data_type_check(x) == 0:
-        if x._r:
+        if x._rev:
             z=DualNumber(np.sqrt(x._val),Reverse=True)
             x.children.append((1/(2*np.sqrt(x._val)),z))
             return z             
