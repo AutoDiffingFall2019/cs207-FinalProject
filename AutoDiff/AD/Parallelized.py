@@ -7,13 +7,13 @@ Created on Tue Dec  3 01:08:10 2019
 import numpy as np
 from DualNumber_with_Reverse import DualNumber
 import ElementaryFunctions_with_reverse as EF
-class Paralized_AD:
+class Parallelized_AD:
     '''
-    Paralized AD class, 
+    parallelized AD class, 
     it stores a function or a list of functions
-    each function is a string (Analogy to function handles)
+    each function is a string (Analogy to Matlab function handles)
     a list of variables required to calculate the derivative
-    each variable is a string (Analogy to function handles)
+    each variable is a string (Analogy to Matlab function handles)
     The main purpose is to return the Jacobian
     ref:https://www.mathworks.com/help/matlab/function-handles.html
     ******For pratical reason, each variable must add an _ in expression******
@@ -75,7 +75,7 @@ if __name__=='__main__':
     func=['_x +_y +sin(_x)',
           'exp(_x+_y)-_x -sqrt(_y)']
     var_names=['x','y']
-    PAD=Paralized_AD(fun=func,var=var_names)
+    PAD=Parallelized_AD(fun=func,var=var_names)
     print(PAD.get_Jacobian([1,2]))
     PAD.add_function('_x+1+_y ')
     print(PAD.get_Jacobian([1,2]))
