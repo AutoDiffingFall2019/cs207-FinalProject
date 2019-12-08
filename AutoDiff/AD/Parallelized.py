@@ -41,6 +41,7 @@ class Parallelized_AD:
         if Var:
             assert isinstance(Var,(str,list))
             self.variable=[Var] if isinstance(Var,str) else Var
+            
     def get_Jacobian(self,loc,forward=False):
         assert len(loc)==len(self.varname)
         self.Jacobian=np.zeros((len(self.function),len(self.varname)))
@@ -60,6 +61,7 @@ class Parallelized_AD:
                 for j in range(len(self.varname)):
                     self.Jacobian[i,j]=self.variable[j].der
         return self.Jacobian
+    
     def Preprocess(self,string:str):
         dictionary={'exp(':'EF.Exp(',
                     'sin(':'EF.Sin(',
@@ -80,14 +82,14 @@ class Parallelized_AD:
         return string
     
 if __name__=='__main__':
-    func=['_x +_y +sin(_x)',
-          'exp(_x+_y)-_x -sqrt(_y)']
-    print('Functions:\nx +y +sin(x)\nexp(x+y)-x -sqrt(y)\nJacobian at [x,y]=[1,2]:')
-    var_names=['x','y']
+    func=['_x**_y + sin(_x)',
+          'exp(sin(_x+_y)+_z)-_x -sqrt(_y)', '_z*_x']
+    #print('Functions:\nx +y +sin(x)\nexp(x+y)-x -sqrt(y)\nJacobian at [x,y]=[1,2]:')
+    var_names=['x','y', 'z']
     PAD=Parallelized_AD(fun=func,var=var_names)
-    print(PAD.get_Jacobian([1,2]))
+    print(PAD.get_Jacobian([1,2,3]))
     print('Working on Forward Mode:')
-    print(PAD.get_Jacobian([1,2],forward=True))
+    print(PAD.get_Jacobian([1,2,3],forward=True))
     print('Adding another Functions:\nx +y +1,\nJacobian at [x,y]=[1,2]:')
     PAD.add_function('_x+1+_y ')
-    print(PAD.get_Jacobian([1,2]))
+    print(PAD.get_Jacobian([1,2,3]))

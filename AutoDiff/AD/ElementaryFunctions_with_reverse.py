@@ -15,10 +15,10 @@ def Sin(x):
             z=DualNumber(np.sin(x._val),Reverse=True)
             x.children.append((np.cos(x._val),z))
             return z
-        return DualNumber(np.sin(x._val),np.cos(x._val)*x._der)
+        else:
+            return DualNumber(np.sin(x._val),np.cos(x._val)*x._der)
     else:
         return DualNumber(np.sin(x),0)
-
     
 def Tan(x):
     '''
@@ -31,10 +31,10 @@ def Tan(x):
             z=DualNumber(np.tan(x._val),Reverse=True)
             x.children.append(((1+np.tan(x._val)*np.tan(x._val)),z))
             return z
-        return DualNumber(np.tan(x._val),(1+np.tan(x._val)*np.tan(x._val))*x._der)
+        else:
+            return DualNumber(np.tan(x._val),(1+np.tan(x._val)*np.tan(x._val))*x._der)
     else:
         return DualNumber(np.tan(x),0)
-
 
 def Cos(x):
     '''
@@ -47,7 +47,8 @@ def Cos(x):
             z=DualNumber(np.cos(x._val),Reverse=True)
             x.children.append((-1*np.sin(x._val),z))
             return z
-        return DualNumber(np.cos(x._val),-1*np.sin(x._val)*x._der)
+        else:
+            return DualNumber(np.cos(x._val),-1*np.sin(x._val)*x._der)
     else:
         return DualNumber(np.cos(x),0)
 
@@ -62,7 +63,8 @@ def Exp(x):
             z=DualNumber(np.exp(x._val),Reverse=True)
             x.children.append((np.exp(x._val),z))
             return z        
-        return DualNumber(np.exp(x._val),np.exp(x._val)*x._der)
+        else:
+            return DualNumber(np.exp(x._val),np.exp(x._val)*x._der)
     else:
         return DualNumber(np.exp(x),0)
 
@@ -77,7 +79,8 @@ def Power(x,n):
             z=DualNumber(x._val**n,Reverse=True)
             x.children.append(((n*(x._val**(n-1)),z)))
             return z
-        return DualNumber(x._val**n,n*(x._val**(n-1))*x._der)
+        else:
+            return DualNumber(x._val**n,n*(x._val**(n-1))*x._der)
     else:
         return DualNumber(x**n,0)
 
@@ -91,11 +94,11 @@ def Log(x):
         if x._rev:
             z=DualNumber(np.log(x._val),Reverse=True)
             x.children.append(((1/x._val),z))
-            return z          
-        return DualNumber(np.log(x._val),(1/x._val)*x._der)
+            return z   
+        else:
+            return DualNumber(np.log(x._val),(1/x._val)*x._der)
     else:
         return DualNumber(np.log(x),0)
-
         
 def ArcSin(x):
     '''
@@ -111,7 +114,6 @@ def ArcSin(x):
         return DualNumber(np.arcsin(x._val),1/np.sqrt(1-x._val**2) * x._der)
     else:
         return DualNumber(np.arcsin(x),0)
-
 
 def ArcCos(x):
     '''
