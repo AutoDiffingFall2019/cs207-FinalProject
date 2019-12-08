@@ -41,6 +41,8 @@ class DualNumber():
     [2.3, 2]
     >>> [DualNumber(2,2.3).val, DualNumber(2,2.3).der]
     [2, 2.3]
+    >>> [DualNumber(2,Reverse=True).val, DualNumber(2,Reverse=True).der]
+    [2, 0]
     >>> [DualNumber(2.3,2.3).val, DualNumber(2.3,2.3).der]
     [2.3, 2.3]
     >>> print(DualNumber(2.3,2.3))
@@ -92,6 +94,11 @@ class DualNumber():
         >>> print(DualNumber(5,1)+3)
         Derivative: 1.00
         Value: 8.00
+        >>> Z =DualNumber(5,Reverse=True)+3
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 8.00
         '''
         try:
             if self._rev:
@@ -117,6 +124,11 @@ class DualNumber():
         >>> print(3+DualNumber(5,1))
         Derivative: 1.00
         Value: 8.00
+        >>> Z =3+DualNumber(5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 8.00
         '''
         return self.__add__(other)
 
@@ -124,6 +136,11 @@ class DualNumber():
         '''
         >>> print(DualNumber(5,1)*3)
         Derivative: 3.00
+        Value: 15.00
+        >>> Z =DualNumber(5,Reverse=True)*3
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
         Value: 15.00
         '''
         try:
@@ -150,7 +167,13 @@ class DualNumber():
         >>> print(3*DualNumber(5,1))
         Derivative: 3.00
         Value: 15.00
+        >>> Z = 3*DualNumber(5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 15.00
         '''
+
         return self.__mul__(other)
 
     def __sub__(self, other):
@@ -158,6 +181,12 @@ class DualNumber():
         >>> print(DualNumber(5,1)-3)
         Derivative: 1.00
         Value: 2.00
+        >>> Z =DualNumber(5,Reverse=True)-3
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 2.00
+
         '''
         try:
             if self._rev:
@@ -182,6 +211,11 @@ class DualNumber():
         '''
         >>> print(3-DualNumber(5,1))
         Derivative: -1.00
+        Value: -2.00
+        >>> Z = 3 - DualNumber(5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
         Value: -2.00
         '''
         try:
@@ -209,6 +243,11 @@ class DualNumber():
         >>> print(DualNumber(5,1)/2)
         Derivative: 0.50
         Value: 2.50
+        >>> Z = DualNumber(5,Reverse=True)/2
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 2.50
         '''
         try:
             if self._rev:
@@ -234,6 +273,11 @@ class DualNumber():
         >>> print(2/DualNumber(5,1))
         Derivative: -0.08
         Value: 0.40
+        >>> Z = 2/DualNumber(5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 0.40
         '''
         try:
             if self._rev:
@@ -258,6 +302,11 @@ class DualNumber():
         '''
         >>> print(DualNumber(5,1)**2)
         Derivative: 10.00
+        Value: 25.00
+        >>> Z = DualNumber(5,Reverse=True)**2
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
         Value: 25.00
         '''
         try:
@@ -285,6 +334,11 @@ class DualNumber():
         >>> print(2**DualNumber(5,1))
         Derivative: 22.18
         Value: 32.00
+        >>> Z = 2**DualNumber(5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 32.00
         '''
         try:
             if self._rev:
@@ -311,6 +365,11 @@ class DualNumber():
         >>> print(+DualNumber(-5,-1))
         Derivative: -1.00
         Value: -5.00
+        >>> Z = +DualNumber(-5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: -5.00
         '''
         if self._rev:
             z = DualNumber(self.val,Reverse=True)
@@ -325,6 +384,11 @@ class DualNumber():
         >>> print(-DualNumber(-5,-1))
         Derivative: 1.00
         Value: 5.00
+        >>> Z = -DualNumber(-5,Reverse=True)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: 5.00
         '''
         if self._rev:
             z = DualNumber(-self.val,Reverse=True)
@@ -337,6 +401,11 @@ class DualNumber():
     def __abs__(self):
         '''
         >>> print(abs(DualNumber(-5,-1)))
+        Derivative: 1.00
+        Value: 5.00
+        >>> Z = abs(DualNumber(-5,Reverse=True))
+        >>> Z.set_der(1)
+        >>> print(Z)
         Derivative: 1.00
         Value: 5.00
         '''
@@ -360,6 +429,11 @@ class DualNumber():
         >>> print(round(DualNumber(-5.234,-1.256),2))
         Derivative: -1.26
         Value: -5.23
+        >>> Z = round(DualNumber(-5.234,Reverse=True), 2)
+        >>> Z.set_der(1)
+        >>> print(Z)
+        Derivative: 1.00
+        Value: -5.23
         '''
         if self._rev:
             z = DualNumber(round(self.val, n),Reverse=True)
@@ -375,6 +449,8 @@ class DualNumber():
         '''
         >>> DualNumber(-5,-1)==DualNumber(-5,-1)
         True
+        >>> DualNumber(-5,Reverse=True)==DualNumber(-5,Reverse=True)
+        True
         '''
         assert isinstance(other,DualNumber)
         if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
@@ -387,6 +463,8 @@ class DualNumber():
         '''
         >>> DualNumber(-5,-1)!=DualNumber(-5,-2)
         True
+        >>> DualNumber(-5,Reverse=True)!=DualNumber(-5,Reverse=True)
+        False
         '''
         assert isinstance(other, DualNumber)
         if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
@@ -399,6 +477,8 @@ class DualNumber():
         '''
         >>> DualNumber(-5,-1) < DualNumber(-4,-2)
         True
+        >>> DualNumber(-5,Reverse=True) < DualNumber(-4,Reverse=True)
+        True
         '''
         assert isinstance(other, DualNumber)
         if self.val < other.val:
@@ -408,6 +488,8 @@ class DualNumber():
     def __le__(self, other):
         '''
         >>> DualNumber(-5,-1) <= DualNumber(-5,-2)
+        True
+        >>> DualNumber(-5,Reverse=True) <= DualNumber(-5,Reverse=True)
         True
         '''
         assert isinstance(other, DualNumber)
@@ -419,6 +501,8 @@ class DualNumber():
         '''
         >>> DualNumber(-5,-1) >= DualNumber(-5,-2)
         True
+        >>> DualNumber(-5,Reverse=True) >= DualNumber(-5,Reverse=True)
+        True
         '''
         assert isinstance(other, DualNumber)
         if self.val >= other.val :
@@ -428,6 +512,8 @@ class DualNumber():
     def __gt__(self, other):
         '''
         >>> DualNumber(5,-1) > DualNumber(-5,-2)
+        True
+        >>> DualNumber(5,Reverse=True) > DualNumber(-5,Reverse=True)
         True
         '''
         assert isinstance(other, DualNumber)

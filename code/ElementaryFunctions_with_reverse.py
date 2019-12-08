@@ -10,6 +10,9 @@ def Sin(x):
     >>> print(Sin(DualNumber(5,1)))
     Derivative: 0.28
     Value: -0.96
+    >>> print(Sin(DualNumber(5,Reverse=True)))
+    Derivative: 0.00
+    Value: -0.96
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -25,6 +28,9 @@ def Tan(x):
     '''
     >>> print(Tan(DualNumber(5,1)))
     Derivative: 12.43
+    Value: -3.38
+    >>> print(Tan(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
     Value: -3.38
     '''
     if data_type_check(x) == 0:
@@ -42,6 +48,9 @@ def Cos(x):
     >>> print(Cos(DualNumber(5,1)))
     Derivative: 0.96
     Value: 0.28
+    >>> print(Cos(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
+    Value: 0.28
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -56,6 +65,9 @@ def Exp(x):
     '''
     >>> print(Exp(DualNumber(5,1)))
     Derivative: 148.41
+    Value: 148.41
+    >>> print(Exp(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
     Value: 148.41
     '''
     if data_type_check(x) == 0:
@@ -72,6 +84,9 @@ def Power(x,n):
     >>> print(Power(DualNumber(5,1),2))
     Derivative: 10.00
     Value: 25.00
+    >>> print(Power(DualNumber(5,Reverse = True),2))
+    Derivative: 0.00
+    Value: 25.00
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -86,6 +101,9 @@ def Log(x, base = e):
     '''
     >>> print(Log(DualNumber(5,1)))
     Derivative: 0.20
+    Value: 1.61
+    >>> print(Log(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
     Value: 1.61
     '''
     if data_type_check(x) == 0:
@@ -103,6 +121,9 @@ def ArcSin(x):
     >>> print(ArcSin(DualNumber(0.5)))
     Derivative: 1.15
     Value: 0.52
+    >>> print(ArcSin(DualNumber(0.5,Reverse = True)))
+    Derivative: 0.00
+    Value: 0.52
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -119,6 +140,9 @@ def ArcCos(x):
     >>> print(ArcCos(DualNumber(0.5)))
     Derivative: -1.15
     Value: 1.05
+    >>> print(ArcCos(DualNumber(0.5,Reverse = True)))
+    Derivative: 0.00
+    Value: 1.05
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -134,6 +158,9 @@ def ArcTan(x):
     >>> print(ArcTan(DualNumber(0.5)))
     Derivative: 0.80
     Value: 0.46
+    >>> print(ArcTan(DualNumber(0.5,Reverse = True)))
+    Derivative: 0.00
+    Value: 0.46
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -148,6 +175,9 @@ def Sqrt(x):
     '''
     >>> print(Sqrt(DualNumber(9,1)))
     Derivative: 0.17
+    Value: 3.00
+    >>> print(Sqrt(DualNumber(9,Reverse = True)))
+    Derivative: 0.00
     Value: 3.00
     '''
     if data_type_check(x) == 0:
@@ -165,6 +195,9 @@ def Sinh(x):
     >>> print(Sinh(DualNumber(5,1)))
     Derivative: 74.21
     Value: 74.20
+    >>> print(Sinh(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
+    Value: 74.20
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -180,6 +213,9 @@ def Cosh(x):
     >>> print(Cosh(DualNumber(5,1)))
     Derivative: 74.20
     Value: 74.21
+    >>> print(Cosh(DualNumber(5,Reverse =  True)))
+    Derivative: 0.00
+    Value: 74.21
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -193,6 +229,9 @@ def Cosh(x):
 def Tanh(x):
     '''
     >>> print(Tanh(DualNumber(5,1)))
+    Derivative: 0.00
+    Value: 1.00
+    >>> print(Tanh(DualNumber(5,Reverse =  True)))
     Derivative: 0.00
     Value: 1.00
     '''
@@ -211,6 +250,9 @@ def L(x):
     '''
     >>> print(L(DualNumber(5,1)))
     Derivative: 0.01
+    Value: 0.99
+    >>> print(L(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
     Value: 0.99
     '''
     if data_type_check(x) == 0:
