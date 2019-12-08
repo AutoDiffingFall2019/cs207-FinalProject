@@ -415,10 +415,13 @@ class DualNumber():
         >>> DualNumber(-5,Reverse=True) < DualNumber(-4,Reverse=True)
         True
         '''
-        assert isinstance(other, DualNumber)
-        if self.val < other.val:
-            return True
-        return False
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val < other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val < other:
+                return True
 
     def __le__(self, other):
         '''
@@ -427,21 +430,31 @@ class DualNumber():
         >>> DualNumber(-5,Reverse=True) <= DualNumber(-5,Reverse=True)
         True
         '''
-        assert isinstance(other, DualNumber)
-        if self.val <= other.val :
-            return True
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val <= other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val <= other:
+                return True
+            
         return False
 
     def __ge__(self, other):
         '''
-        >>> DualNumber(-5,-1) >= DualNumber(-5,-2)
+        >>> DualNumber(-5,-1) >= -6
         True
         >>> DualNumber(-5,Reverse=True) >= DualNumber(-5,Reverse=True)
         True
         '''
-        assert isinstance(other, DualNumber)
-        if self.val >= other.val :
-            return True
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val >= other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val >= other:
+                return True
+            
         return False
 
     def __gt__(self, other):
@@ -451,9 +464,14 @@ class DualNumber():
         >>> DualNumber(5,Reverse=True) > DualNumber(-5,Reverse=True)
         True
         '''
-        assert isinstance(other, DualNumber)
-        if self.val > other.val :
-            return True
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val > other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val > other:
+                return True
+            
         return False
 if __name__ =="__main__":
     # x=DualNumber(-2.578,-1.2345)

@@ -7,7 +7,7 @@ class Adam():
     """
     DESCRIPTION
     =======
-    A class to run basic gradient descent local optimization using our autoamtic 
+    A class to run basic gradient descent LOCAL optimization using our autoamtic 
     differentation package.  
     
     INPUTS

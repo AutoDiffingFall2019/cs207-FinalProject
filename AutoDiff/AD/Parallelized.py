@@ -51,8 +51,8 @@ class Parallelized_AD:
         
     EXAMPLES
     =========
-    >>> Parallelized_AD(fun=['_x**_y + sin(_x) + _z'],var=['x','y', 'z']).get_Jacobian([1,2,3])
-    array([[2.54030231, 0.        , 1.        ]])
+    >>> Parallelized_AD(fun=['_x**_y + logit(_x+_y) + _z'],var=['x','y', 'z']).get_Jacobian([0.5,0.25,1])
+    array([[ 0.6383432 , -0.36496999,  1.        ]])
     >>> func = ['_x + sin(_y)*_z', '_x + sin(_y)*exp(_z)']
     >>> PAD = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
     >>> PAD.get_Jacobian([1,2,3])
@@ -160,9 +160,11 @@ class Parallelized_AD:
         doctests for details on usage.  User inputs location of vector-valued function,
         and get_value returns the value at the specified location.
         
-        >>> PAD = Parallelized_AD(fun=['_x*sin(_y*_z)+_x', '_x*exp(_y)+_z**2'], var=['x', 'y', 'z'])
-        >>> print(PAD.get_value([9,2,1]))
-        [17.18367684 67.50150489]
+        >>> PAD = Parallelized_AD(fun=['_x * arcsine(_y*_z)+_x'], var=['x', 'y', 'z'])
+        >>> print(PAD.get_value([0.4,0.2,1]))
+        [0.48054317]
+        >>> print(PAD.get_Jacobian([0.4,0.2,1]))
+        [[1.20135792 0.40824829 0.08164966]]
         """
         assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
         self._value=np.zeros((len(self.function)))
@@ -173,13 +175,11 @@ class Parallelized_AD:
             
             # pre-process each function to be differentatied
             translated_fun=self.preprocess(fun)
-            
+
             # for each variable, take the derivative at the value specified
-            for j in range(len(self.varname)):
-                self.variable=[DualNumber(value,dual=0) for value in loc]   
-                self.variable[j]=DualNumber(loc[j],dual=1) 
-                element=eval(translated_fun)
-                self._value[i]=element.val
+            self.variable=[DualNumber(value) for value in loc]
+            element=eval(translated_fun)
+            self._value[i]=element.val
         return self._value
         
     
@@ -199,11 +199,15 @@ class Parallelized_AD:
                     'cos(':'EF.Cos(',
                     'tan(':'EF.Tan(',
                     'log(':'EF.Log(',
-                    'arcsin(':'EF.ArcSin(',
-                    'arccos(':'EF.ArcCos(',
-                    'arctan(':'EF.ArcTan(',
+                    'arcsine(':'EF.ArcSin(',
+                    'arccosi(':'EF.ArcCos(',
+                    'arctang(':'EF.ArcTan(',
                     'sqrt(':'EF.Sqrt(',
-                    'power(':'EF.Power('}
+                    'power(':'EF.Power(',
+                    'logit(':'EF.L(',
+                    'sinh(':'EF.Sinh(',
+                    'cosh(':'EF.Cosh(',
+                    'tanh(':'EF.Tanh('}
         for key,item in dictionary.items():
             string=string.replace(key,item)    
         for i,name in enumerate(self.varname):
@@ -243,3 +247,5 @@ class Parallelized_AD:
 if __name__=='__main__':   
     import doctest
     doctest.testmod()
+    #PAD = Parallelized_AD(fun=['_x * arcsine(_y*_z)+_x'], var=['x', 'y', 'z'])
+    #print(PAD.get_value([9,2,1]))
