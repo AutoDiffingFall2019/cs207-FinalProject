@@ -377,6 +377,84 @@ class DualNumber():
             val2 = round(self.val, n)
             der2 = round(self.der, n)
             return DualNumber(val2, der2)
+        
+     
+    # Overloading comparison operators
+    def __eq__(self, other):
+        '''
+        >>> DualNumber(-5,-1)==DualNumber(-5,-1)
+        True
+        >>> DualNumber(-5,Reverse=True)==DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert isinstance(other,DualNumber)
+        if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
+            return True
+        if self._rev and other._rev and self.val == other.val:
+            return True
+        return False
+
+    def __ne__(self, other):
+        '''
+        >>> DualNumber(-5,-1)!=DualNumber(-5,-2)
+        True
+        >>> DualNumber(-5,Reverse=True)!=DualNumber(-5,Reverse=True)
+        False
+        '''
+        assert isinstance(other, DualNumber)
+        if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
+            return False
+        if self._rev and other._rev and self.val == other.val:
+            return False
+        return True
+
+    def __lt__(self, other):
+        '''
+        >>> DualNumber(-5,-1) < DualNumber(-4,-2)
+        True
+        >>> DualNumber(-5,Reverse=True) < DualNumber(-4,Reverse=True)
+        True
+        '''
+        assert isinstance(other, DualNumber)
+        if self.val < other.val:
+            return True
+        return False
+
+    def __le__(self, other):
+        '''
+        >>> DualNumber(-5,-1) <= DualNumber(-5,-2)
+        True
+        >>> DualNumber(-5,Reverse=True) <= DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert isinstance(other, DualNumber)
+        if self.val <= other.val :
+            return True
+        return False
+
+    def __ge__(self, other):
+        '''
+        >>> DualNumber(-5,-1) >= DualNumber(-5,-2)
+        True
+        >>> DualNumber(-5,Reverse=True) >= DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert isinstance(other, DualNumber)
+        if self.val >= other.val :
+            return True
+        return False
+
+    def __gt__(self, other):
+        '''
+        >>> DualNumber(5,-1) > DualNumber(-5,-2)
+        True
+        >>> DualNumber(5,Reverse=True) > DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert isinstance(other, DualNumber)
+        if self.val > other.val :
+            return True
+        return False
 if __name__ =="__main__":
     # x=DualNumber(-2.578,-1.2345)
     # y=DualNumber(3,1)

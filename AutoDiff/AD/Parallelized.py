@@ -79,7 +79,16 @@ class Parallelized_AD:
         else:
             self.varname=[]
         self.variable=[]
-        self.Jacobian=None
+        self._Jacobian=None
+        self._value = None
+    
+    @property
+    def Jacobian(self):
+        return self._Jacobian
+    
+    @property
+    def value(self):
+        return self._value
         
     def add_function(self,fun=None):
         """
@@ -116,7 +125,7 @@ class Parallelized_AD:
         is used
         """
         assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
-        self.Jacobian=np.zeros((len(self.function),len(self.varname)))
+        self._Jacobian=np.zeros((len(self.function),len(self.varname)))
         
         # for each function, if forward, do forward mode calculation, else do reverse
         # see documentation for details on reverse mode calculation
@@ -129,7 +138,7 @@ class Parallelized_AD:
                     self.variable=[DualNumber(value,dual=0) for value in loc]   
                     self.variable[j]=DualNumber(loc[j],dual=1) 
                     element=eval(translated_fun)
-                    self.Jacobian[i,j]=element.der
+                    self._Jacobian[i,j]=element.der
             # similarly, if reverse, carry out reverse mode
             else:
                 if len(loc) == len(self.varname):
@@ -140,8 +149,39 @@ class Parallelized_AD:
                 element=eval(translated_fun)
                 element.set_der(1)
                 for j in range(len(self.varname)):
-                    self.Jacobian[i,j]=self.variable[j].der
-        return self.Jacobian
+                    self._Jacobian[i,j]=self.variable[j].der
+        return self._Jacobian
+    
+    def get_value(self,loc):
+        """
+        DESCRIPTION
+        =======
+        A class method to get the value of user-specified vector function.  See
+        doctests for details on usage.  User inputs location of vector-valued function,
+        and get_value returns the value at the specified location.
+        
+        >>> PAD = Parallelized_AD(fun=['_x*sin(_y*_z)+_x', '_x*exp(_y)+_z**2'], var=['x', 'y', 'z'])
+        >>> print(PAD.get_value([9,2,1]))
+        [17.18367684 67.50150489]
+        """
+        assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
+        self._value=np.zeros((len(self.function)))
+        
+        # for each function, if forward, do forward mode calculation, else do reverse
+        # see documentation for details on reverse mode calculation
+        for i, fun in enumerate(self.function):
+            
+            # pre-process each function to be differentatied
+            translated_fun=self.preprocess(fun)
+            
+            # for each variable, take the derivative at the value specified
+            for j in range(len(self.varname)):
+                self.variable=[DualNumber(value,dual=0) for value in loc]   
+                self.variable[j]=DualNumber(loc[j],dual=1) 
+                element=eval(translated_fun)
+                self._value[i]=element.val
+        return self._value
+        
     
     def preprocess(self, string:str):
         """
@@ -149,6 +189,7 @@ class Parallelized_AD:
         =======
         A class method to process the user input functions into a form such that we 
         can use our DualNumber class and ElementaryFunction module.
+        
         >>> PAD = Parallelized_AD(fun=['sin(_x)'],var=['x'])
         >>> print(PAD.preprocess(PAD.function[0]))
         EF.Sin(self.variable[0])
@@ -169,7 +210,21 @@ class Parallelized_AD:
             string=string.replace('_' + name,f'self.variable[{i}]')
 
         return string
+    
+    # Overloading comparison operators
+    def __eq__(self, other):
+        assert isinstance(other,Parallelized_AD)
+        if self.Jacobian is not None and other.Jacobian is not None and self.Jacobian == other.Jacobian:
+            return True
+        return False
+    
+    def __ne__(self, other):
+        assert isinstance(other, Parallelized_AD)
+        if self.Jacobian is not None and other.Jacobian is not None and self.Jacobian == other.Jacobian:
+            return False
+        return True
    
 if __name__=='__main__':
+    
     import doctest
     doctest.testmod()
