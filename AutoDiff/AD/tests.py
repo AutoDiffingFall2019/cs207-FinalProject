@@ -1,12 +1,13 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber import DualNumber
-import ElementaryFunctions as EF
+from AD.DualNumber import DualNumber
+import AD.ElementaryFunctions as EF
 import numpy as np
+from scipy.special import logit
 import pytest
 
-
+# DualNumber tests
 def test_overload_add():
     x = DualNumber(5,1)
     y = DualNumber(7,1)
@@ -17,12 +18,10 @@ def test_overload_add():
     assert (5 + x).val == 10 and (5 + x).der == 1
     assert (5.0 + x).val == 10 and (5.0 + x).der == 1
 
-
 def test_overload_add_types():
     with pytest.raises(AssertionError):
         x = DualNumber(5)
         x+"test"
-
 
 def test_overload_multiply():
     x = DualNumber(5)
@@ -33,7 +32,6 @@ def test_overload_multiply():
     assert (x * 5.0).val == 25 and (x * 5.0).der == 5
     assert (5.0 * x).val == 25 and (5.0 * x).der == 5
     assert (5 * x).val == 25 and (5 * x).der == 5
-
 
 def test_overload_multiply_types():
     with pytest.raises(AssertionError):
@@ -51,7 +49,6 @@ def test_overload_sub():
     assert (5 - x).val == 0 and (5 - x).der == -2
     assert (5.0 - x).val == 0 and (5.0 - x).der == -2
 
-
 def test_overload_sub_types():
     with pytest.raises(AssertionError):
         x = DualNumber(5)
@@ -67,7 +64,6 @@ def test_overload_truediv():
     assert (x / 5.0).val == 2.0 and (x / 5.0).der == 0.4
     assert (5 / x).val == 0.5 and (5 / x).der == -0.1
     assert (5.0 / x).val == 0.5 and (5.0 / x).der == -0.1
-
 
 def test_overload_truediv_types():
     with pytest.raises(AssertionError):
@@ -85,24 +81,20 @@ def test_overload_power():
     assert (2**x).val == 4 and (2**x).der == np.log(2)*4
     assert (2.0**x).val == 4 and (2.0**x).der == np.log(2)*4
 
-
 def test_overload_power_types():
     with pytest.raises(AssertionError):
         x = DualNumber(5)
         x**"test"
-
 
 def test_overload_pos():
     x = DualNumber(5,1)
     y = +x
     assert y.val == 5 and y.der == 1
 
-
 def test_overload_neg():
     x = DualNumber(5,1)
     y = -x
     assert y.val == -5 and y.der == -1
-
 
 def test_overload_abs():
     x = DualNumber(-5,-1)
@@ -111,7 +103,6 @@ def test_overload_abs():
     x = DualNumber(5,1)
     y = abs(x)
     assert y.val == 5 and y.der == 1
-
 
 def test_overload_round():
     x = DualNumber(5.123,1.0012)
@@ -130,21 +121,37 @@ def test_jacobian():
     x = DualNumber(5,1)
     assert x.jacobian == 1
 
+def test_overload_eq():
+    x = DualNumber(5,1)
+    y = DualNumber(5,1)
+    assert x == y
 
-# test_overload_add()
-# test_overload_add_types()
-# test_overload_multiply()
-# test_overload_multiply_types()
-# test_overload_sub()
-# test_overload_sub_types()
-# test_overload_truediv()
-# test_overload_truediv_types()
-# test_overload_pos()
-# test_overload_neg()
-# test_overload_abs()
-# test_overload_round()
+def test_overload_ne():
+    x = DualNumber(5,1)
+    y = DualNumber(6,1)
+    z = DualNumber(5,2)
+    assert x != y
+    assert x != z
+    
+test_overload_add()
+test_overload_add_types()
+test_overload_multiply()
+test_overload_multiply_types()
+test_overload_sub()
+test_overload_sub_types()
+test_overload_truediv()
+test_overload_truediv_types()
+test_overload_pos()
+test_overload_neg()
+test_overload_abs()
+test_overload_round()
+test_repr()
+test_str()
+test_jacobian()
+test_overload_eq()
+test_overload_ne()
 
-
+# Elementary Function tests
 def test_sin():
     Test_Dual_Number_1 = DualNumber(1)
     assert EF.Sin(Test_Dual_Number_1).val == np.sin(1) and EF.Sin(Test_Dual_Number_1).der == np.cos(1)
@@ -162,7 +169,6 @@ def test_tan():
     assert EF.Tan(Test_Dual_Number_1).val == np.tan(1) and EF.Tan(Test_Dual_Number_1).der == 1 / np.cos(1)**2
     Test_Dual_Number_1 = 1
     assert EF.Tan(Test_Dual_Number_1).val == np.tan(1) and EF.Tan(Test_Dual_Number_1).der == 0
-
 
 def test_exp():
     Test_Dual_Number_1 = DualNumber(1)
@@ -215,9 +221,47 @@ def test_data_type_check():
         EF.data_type_check(x)
     except AttributeError:
         return 0
+
+def test_sinh():
+    Test_Dual_Number_1 = DualNumber(1)
+    assert EF.Sinh(Test_Dual_Number_1).val == np.sinh(1) and EF.Sinh(Test_Dual_Number_1).der == np.cosh(1)
+    Test_Dual_Number_1 = 1
+    assert EF.Sinh(Test_Dual_Number_1).val == np.sinh(1) and EF.Sin(Test_Dual_Number_1).der == 0
+
+def test_cosh():
+    Test_Dual_Number_1 = DualNumber(1)
+    assert EF.Cosh(Test_Dual_Number_1).val == np.cosh(1) and EF.Cosh(Test_Dual_Number_1).der == np.sinh(1)
+    Test_Dual_Number_1 = 1
+    assert EF.Cosh(Test_Dual_Number_1).val == np.cosh(1) and EF.Cosh(Test_Dual_Number_1).der == 0
+
+def test_tanh():
+    Test_Dual_Number_1 = DualNumber(1)
+    assert EF.Tanh(Test_Dual_Number_1).val == np.tanh(1) and EF.Tanh(Test_Dual_Number_1).der == 1 / np.cosh(1)**2
+    Test_Dual_Number_1 = 1
+    assert EF.Tanh(Test_Dual_Number_1).val == np.tanh(1) and EF.Tanh(Test_Dual_Number_1).der == 0
+
+def test_logit():
+    Test_Dual_Number_1 = DualNumber(1)
+    assert EF.Logit(Test_Dual_Number_1).val == logit(1) and EF.Logit(Test_Dual_Number_1).der == np.exp(-1) / (1+np.exp(-1))**2
+    Test_Dual_Number_1 = 1
+    assert EF.Logit(Test_Dual_Number_1).val == logit(1) and EF.Logit(Test_Dual_Number_1).der == 0
+
     
-    
-    
-    
-        
+test_sin()      
+test_cos()
+test_tan()
+test_exp()
+test_Power()
+test_Log()
+test_ArcSin()
+test_ArcCos()
+test_ArcTan()
+test_Sqrt()
+test_data_type_check()
+test_sinh()      
+test_cosh()
+test_tanh()
+test_logit()
+
+# Reverse Mode tests
 
