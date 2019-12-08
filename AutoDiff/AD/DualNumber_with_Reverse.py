@@ -56,6 +56,7 @@ class DualNumber():
         assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real
         self._der = dual
+        self._rev=False
         if Reverse is True:
             self._der = None
             self.children = []
