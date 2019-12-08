@@ -41,16 +41,24 @@ class Parallelized_AD:
         if Var:
             assert isinstance(Var,(str,list))
             self.variable=[Var] if isinstance(Var,str) else Var
-    def get_Jacobian(self,loc):
+    def get_Jacobian(self,loc,forward=False):
         assert len(loc)==len(self.varname)
-        self.Jacobian=np.zeros((len(self.varname),len(self.function)))
+        self.Jacobian=np.zeros((len(self.function),len(self.varname)))
         for i, fun in enumerate(self.function):
-            self.variable=[DualNumber(value,Reverse=True) for value in loc]        
-            translated_fun=self.Preprocess(fun)
-            element=eval(translated_fun)
-            element.set_der(1)
-            for j in range(len(self.varname)):
-                self.Jacobian[j,i]=self.variable[j].der
+            if forward:#Working based on Forward Mode
+                translated_fun=self.Preprocess(fun)
+                for j in range(len(self.varname)):
+                    self.variable=[DualNumber(value,dual=0) for value in loc]   
+                    self.variable[j]=DualNumber(loc[j],dual=1) 
+                    element=eval(translated_fun)
+                    self.Jacobian[i,j]=element.der
+            else:#Working based on Backward Mode
+                self.variable=[DualNumber(value,Reverse=True) for value in loc]        
+                translated_fun=self.Preprocess(fun)
+                element=eval(translated_fun)
+                element.set_der(1)
+                for j in range(len(self.varname)):
+                    self.Jacobian[i,j]=self.variable[j].der
         return self.Jacobian
     def Preprocess(self,string:str):
         dictionary={'exp(':'EF.Exp(',
@@ -74,8 +82,12 @@ class Parallelized_AD:
 if __name__=='__main__':
     func=['_x +_y +sin(_x)',
           'exp(_x+_y)-_x -sqrt(_y)']
+    print('Functions:\nx +y +sin(x)\nexp(x+y)-x -sqrt(y)\nJacobian at [x,y]=[1,2]:')
     var_names=['x','y']
     PAD=Parallelized_AD(fun=func,var=var_names)
     print(PAD.get_Jacobian([1,2]))
+    print('Working on Forward Mode:')
+    print(PAD.get_Jacobian([1,2],forward=True))
+    print('Adding another Functions:\nx +y +1,\nJacobian at [x,y]=[1,2]:')
     PAD.add_function('_x+1+_y ')
     print(PAD.get_Jacobian([1,2]))
