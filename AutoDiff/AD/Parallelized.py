@@ -177,11 +177,10 @@ class Parallelized_AD:
             translated_fun=self.preprocess(fun)
 
             # for each variable, take the derivative at the value specified
-            for j in range(len(self.varname)):
-                self.variable=[DualNumber(value,dual=0) for value in loc]   
-                self.variable[j]=DualNumber(loc[j],dual=1) 
-                element=eval(translated_fun)
-                self._value[i]=element.val
+            # for each variable, take the derivative at the value specified
+            self.variable=[DualNumber(value) for value in loc]
+            element=eval(translated_fun)
+            self._value[i]=element.val
         return self._value
         
     
