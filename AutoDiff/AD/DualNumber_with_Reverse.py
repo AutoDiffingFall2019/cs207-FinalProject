@@ -58,7 +58,7 @@ class DualNumber():
         if Reverse is True:
             self._der = None
             self.children = []
-            self._rev=True #Working on reverse mode
+            self._rev=True
     @property
     def val(self):
         return self._val

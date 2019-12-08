@@ -7,18 +7,66 @@ Created on Tue Dec  3 01:08:10 2019
 import numpy as np
 from DualNumber_with_reverse import DualNumber
 import ElementaryFunctions_with_reverse as EF
+
 class Parallelized_AD:
-    '''
-    parallelized AD class, 
-    it stores a function or a list of functions
-    each function is a string (Analogy to Matlab function handles)
-    a list of variables required to calculate the derivative
-    each variable is a string (Analogy to Matlab function handles)
-    The main purpose is to return the Jacobian
-    ref:https://www.mathworks.com/help/matlab/function-handles.html
-    ******For pratical reason, each variable must add an _ in expression******
-    For instance, 'sin(x1)' must be written as 'sin(_x1)' and variable name is 'x1'
-    '''
+    """
+    DESCRIPTION
+    =======
+    A class to run automatic differentiation in both forward and reverse mode for vector
+    functions of vectors and scalars.  It stores a function or a list of functions, where
+    each function is a string (similar to Matlab function handles).  A list of variables 
+    is required to calculate the derivative.  For instance, 'sin(x1)' must be written as 
+    func ='sin(_x1)' and var_names = 'x1'.  To initalize a Parallelized_AD instance, the user must then
+    write PAD=Parallelized_AD(fun=func,var=var_names).
+    
+    INPUTS
+    =======
+    fun: array, default None
+        Stores the list of functions for which we will eventually calculate the Jacobian. Note that all variables
+        in the function array must be preceded by an underscore '_', e.g. _x.
+    var: array, default None
+        Stores list of variables (will differentiate function wrt each)
+    Reverse: Boolean, optional, if set to true the gradient will be calculated based on reverse mode
+        Default value is false, in which case forward mode is used.
+    RETURNS
+    ========
+    Parallelized_AD: An instance with methods such as get_Jacobian() to get the value of the Jacobian
+    at a certain point.  The user can also add functions to the current list of funnctions with the 
+    add_function() method.
+    
+    
+    NOTES
+    =====
+    PRE:
+        - fun, var are arrays or strings
+        - get_Jacobian() method takes numeric loc array as an input, the location where 
+        the Jacobian should be evaluated
+        
+    POST:
+        - function, variables will be stored in public attributes self.function, self.variable
+        - self.Jacobian is initialized to None
+        - raises a AttributeError exception if function input is not a list or string
+        - raises a AttributeError exception if variable input is not a list or string
+        - defines the overloading of arithmetic operators and unary operators
+        
+    EXAMPLES
+    =========
+    >>> Parallelized_AD(fun=['_x**_y + sin(_x) + _z'],var=['x','y', 'z']).get_Jacobian([1,2,3])
+    array([[2.54030231, 0.        , 1.        ]])
+    >>> func = ['_x + sin(_y)*_z', '_x + sin(_y)*exp(_z)']
+    >>> PAD = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
+    >>> PAD.get_Jacobian([1,2,3])
+    array([[ 1.        , -1.24844051,  0.90929743],
+           [ 1.        , -8.35853265, 18.26372704]])
+    >>> func = ['_x + sin(_y)*_z', '_x + sin(_y)*exp(_z)']
+    >>> PAD = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
+    >>> PAD.add_function('_x+_y+1')
+    >>> PAD.get_Jacobian([1,2,3], forward=True)
+    array([[ 1.        , -1.24844051,  0.90929743],
+           [ 1.        , -8.35853265, 18.26372704],
+           [ 1.        ,  1.        ,  0.        ]])
+    """
+
     def __init__(self,fun=None,var=None):
         if fun:
             assert isinstance(fun,(str,list))
@@ -32,42 +80,79 @@ class Parallelized_AD:
             self.varname=[]
         self.variable=[]
         self.Jacobian=None
+        
     def add_function(self,fun=None):
+        """
+        DESCRIPTION
+        =======
+        A class method to add a function to an existing Parallelized_AD object.  For example:
+        >>> PAD = Parallelized_AD(fun=['_x**_y + sin(_x) + _z'],var=['x','y', 'z'])
+        >>> PAD.add_function('_x')
+        >>> print(PAD.function)
+        ['_x**_y + sin(_x) + _z', '_x']
+        
+        Assert conditions ensure input is a string
+        """
         if fun:
             assert isinstance(fun,str)
             self.function=[self.function] if isinstance(self.function,str) else self.function
             self.function.append(fun)
+            
     def specify_variables(self,Var=None):
         if Var:
             assert isinstance(Var,(str,list))
             self.variable=[Var] if isinstance(Var,str) else Var
             
     def get_Jacobian(self,loc,forward=False):
-        #print(loc)
-        #print(self.varname)
+        """
+        DESCRIPTION
+        =======
+        A class method to get the Jacobian of user-specified vector function.  See
+        doctests for details on usage.  User inputs location to take Jacobian, and
+        function returns the Jacobian at that point.  Assert conditions ensure 
+        dimension of location input is the same as the number of variables.
+        
+        forward argument specifies whether reverse (False) or forward (True) mode
+        is used
+        """
         assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
         self.Jacobian=np.zeros((len(self.function),len(self.varname)))
+        
+        # for each function, if forward, do forward mode calculation, else do reverse
+        # see documentation for details on reverse mode calculation
         for i, fun in enumerate(self.function):
-            if forward:#Working based on Forward Mode
-                translated_fun=self.Preprocess(fun)
+            if forward:
+                # pre-process each function to be differentatied
+                translated_fun=self.preprocess(fun)
+                # for each variable, take the derivative at the value specified
                 for j in range(len(self.varname)):
                     self.variable=[DualNumber(value,dual=0) for value in loc]   
                     self.variable[j]=DualNumber(loc[j],dual=1) 
                     element=eval(translated_fun)
                     self.Jacobian[i,j]=element.der
-            else:#Working based on Backward Mode
+            # similarly, if reverse, carry out reverse mode
+            else:
                 if len(loc) == len(self.varname):
                     self.variable=[DualNumber(value,Reverse=True) for value in loc]
                 else:
                     self.variable=[DualNumber(value,Reverse=True) for value in loc[0]]
-                translated_fun=self.Preprocess(fun)
+                translated_fun=self.preprocess(fun)
                 element=eval(translated_fun)
                 element.set_der(1)
                 for j in range(len(self.varname)):
                     self.Jacobian[i,j]=self.variable[j].der
         return self.Jacobian
     
-    def Preprocess(self,string:str):
+    def preprocess(self, string:str):
+        """
+        DESCRIPTION
+        =======
+        A class method to process the user input functions into a form such that we 
+        can use our DualNumber class and ElementaryFunction module.
+        >>> PAD = Parallelized_AD(fun=['sin(_x)'],var=['x'])
+        >>> print(PAD.preprocess(PAD.function[0]))
+        EF.Sin(self.variable[0])
+        """
         dictionary={'exp(':'EF.Exp(',
                     'sin(':'EF.Sin(',
                     'cos(':'EF.Cos(',
@@ -81,19 +166,10 @@ class Parallelized_AD:
         for key,item in dictionary.items():
             string=string.replace(key,item)    
         for i,name in enumerate(self.varname):
-            string=string.replace('_'+name,f'self.variable[{i}]')
+            string=string.replace('_' + name,f'self.variable[{i}]')
 
-        #print(string) #For debugging
         return string
-    
+   
 if __name__=='__main__':
-    func=['_x**_y + sin(_x)']
-    #print('Functions:\nx +y +sin(x)\nexp(x+y)-x -sqrt(y)\nJacobian at [x,y]=[1,2]:')
-    var_names=['x','y', 'z']
-    PAD=Parallelized_AD(fun=func,var=var_names)
-    print(PAD.get_Jacobian([1,2,3]))
-    print('Working on Forward Mode:')
-    print(PAD.get_Jacobian([1,2,3],forward=True))
-    print('Adding another Functions:\nx +y +1,\nJacobian at [x,y]=[1,2]:')
-    PAD.add_function('_x+1+_y ')
-    print(PAD.get_Jacobian([1,2,3]))
+    import doctest
+    doctest.testmod()
