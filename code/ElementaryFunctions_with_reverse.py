@@ -3,6 +3,7 @@
 
 from DualNumber_with_Reverse import DualNumber
 import numpy as np
+from math import e
 
 def Sin(x):
     '''
@@ -81,7 +82,7 @@ def Power(x,n):
     else:
         return DualNumber(x**n,0)
 
-def Log(x):
+def Log(x, base = e):
     '''
     >>> print(Log(DualNumber(5,1)))
     Derivative: 0.20
@@ -89,12 +90,12 @@ def Log(x):
     '''
     if data_type_check(x) == 0:
         if x._rev:
-            z=DualNumber(np.log(x._val),Reverse=True)
-            x.children.append(((1/x._val),z))
+            z=DualNumber(np.log(x._val)/np.log(base), Reverse=True)
+            x.children.append((1/(x._val*np.log(base)),z))
             return z          
-        return DualNumber(np.log(x._val),(1/x._val)*x._der)
+        return DualNumber(np.log(x._val)/np.log(base), (1/(x._val*np.log(base)))*x._der)
     else:
-        return DualNumber(np.log(x),0)
+        return DualNumber(np.log(x)/np.log(base), 0)
 
         
 def ArcSin(x):

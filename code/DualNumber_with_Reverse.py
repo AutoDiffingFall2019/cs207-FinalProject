@@ -60,7 +60,7 @@ class DualNumber():
         if Reverse is True:
             self._der = None
             self.children = []
-            self._rev=True #Working on reverse mode
+            self._rev = True #Working on reverse mode
     @property
     def val(self):
         return self._val
@@ -377,7 +377,9 @@ class DualNumber():
         True
         '''
         assert isinstance(other,DualNumber)
-        if self._rev == other._rev and self.val == other.val and self.der == other.der :
+        if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
+            return True
+        if self._rev and other._rev and self.val == other.val:
             return True
         return False
 
@@ -387,9 +389,11 @@ class DualNumber():
         True
         '''
         assert isinstance(other, DualNumber)
-        if self._rev == other._rev and (self.val != other.val or self.der != other.der):
-            return True
-        return False
+        if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
+            return False
+        if self._rev and other._rev and self.val == other.val:
+            return False
+        return True
 
     def __lt__(self, other):
         '''
@@ -397,7 +401,7 @@ class DualNumber():
         True
         '''
         assert isinstance(other, DualNumber)
-        if self.val < other.val :
+        if self.val < other.val:
             return True
         return False
 
