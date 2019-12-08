@@ -49,7 +49,7 @@ class DualNumber():
     """
 
     def __init__(self, real, dual=1,Reverse=False):
-        print(real)
+        #print(real)
         assert (isinstance(real, int) or isinstance(real, float)), "Check the type of real!"
         assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real

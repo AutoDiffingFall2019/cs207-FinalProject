@@ -43,8 +43,8 @@ class Parallelized_AD:
             self.variable=[Var] if isinstance(Var,str) else Var
             
     def get_Jacobian(self,loc,forward=False):
-        print(loc)
-        print(self.varname)
+        #print(loc)
+        #print(self.varname)
         assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
         self.Jacobian=np.zeros((len(self.function),len(self.varname)))
         for i, fun in enumerate(self.function):
