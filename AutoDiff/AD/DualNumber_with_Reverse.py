@@ -56,12 +56,7 @@ class DualNumber():
         assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real
         self._der = dual
-<<<<<<< HEAD
         self._rev=Reverse
-||||||| merged common ancestors
-=======
-        self._rev=False
->>>>>>> 032eeac677ee94444f29d20f40c6b37353cc8655
         if Reverse is True:
             self._der = None
             self.children = []
