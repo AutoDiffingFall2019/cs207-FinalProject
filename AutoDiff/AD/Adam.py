@@ -73,6 +73,7 @@ class Adam_optimizer():
         		break   
         	self._theta = theta1								
         return self._theta
+    
 if __name__=='__main__':
     def Demo_gradient(x):
         x=DualNumber(x);

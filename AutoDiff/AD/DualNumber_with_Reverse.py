@@ -48,10 +48,8 @@ class DualNumber():
     Value: 2.30
     """
 
-
-
     def __init__(self, real, dual=1,Reverse=False):
-        #print(type(real))
+        print(real)
         assert (isinstance(real, int) or isinstance(real, float)), "Check the type of real!"
         assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real
@@ -176,9 +174,10 @@ class DualNumber():
                 z = DualNumber(self._val - other,Reverse=True)
                 self.children.append((1, z))
                 return z 
-            val2 = self.val - other
-            der2 = self.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = self.val - other
+                der2 = self.der
+                return DualNumber(val2, der2)
 
     def __rsub__(self, other):
         '''
@@ -192,19 +191,20 @@ class DualNumber():
                 self.children.append((-1, z))
                 other.children.append((1, z))
                 return z                
-            
-            val2 = other.val - self.val
-            der2 = other.der - self.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = other.val - self.val
+                der2 = other.der - self.der
+                return DualNumber(val2, der2)
         except AttributeError:
             assert(isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
                 z = DualNumber(other - self.val,Reverse=True)
                 self.children.append((-1, z))
                 return z
-            val2 = other - self.val
-            der2 = -self.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = other - self.val
+                der2 = -self.der
+                return DualNumber(val2, der2)
 
     def __truediv__(self, other):
         '''
@@ -228,9 +228,10 @@ class DualNumber():
                 z = DualNumber(self.val / other,Reverse=True)
                 self.children.append((1/other , z))
                 return z
-            val2 = self.val / other
-            der2 = self.der / other
-            return DualNumber(val2, der2)
+            else:
+                val2 = self.val / other
+                der2 = self.der / other
+                return DualNumber(val2, der2)
 
     def __rtruediv__(self, other):
         '''

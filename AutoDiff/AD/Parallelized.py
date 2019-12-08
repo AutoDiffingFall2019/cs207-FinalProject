@@ -5,7 +5,7 @@ Created on Tue Dec  3 01:08:10 2019
 
 """
 import numpy as np
-from DualNumber_with_Reverse import DualNumber
+from DualNumber_with_reverse import DualNumber
 import ElementaryFunctions_with_reverse as EF
 class Parallelized_AD:
     '''
@@ -43,7 +43,9 @@ class Parallelized_AD:
             self.variable=[Var] if isinstance(Var,str) else Var
             
     def get_Jacobian(self,loc,forward=False):
-        assert len(loc)==len(self.varname)
+        print(loc)
+        print(self.varname)
+        assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
         self.Jacobian=np.zeros((len(self.function),len(self.varname)))
         for i, fun in enumerate(self.function):
             if forward:#Working based on Forward Mode
@@ -54,7 +56,10 @@ class Parallelized_AD:
                     element=eval(translated_fun)
                     self.Jacobian[i,j]=element.der
             else:#Working based on Backward Mode
-                self.variable=[DualNumber(value,Reverse=True) for value in loc]        
+                if len(loc) == len(self.varname):
+                    self.variable=[DualNumber(value,Reverse=True) for value in loc]
+                else:
+                    self.variable=[DualNumber(value,Reverse=True) for value in loc[0]]
                 translated_fun=self.Preprocess(fun)
                 element=eval(translated_fun)
                 element.set_der(1)
@@ -82,8 +87,7 @@ class Parallelized_AD:
         return string
     
 if __name__=='__main__':
-    func=['_x**_y + sin(_x)',
-          'exp(sin(_x+_y)+_z)-_x -sqrt(_y)', '_z*_x']
+    func=['_x**_y + sin(_x)']
     #print('Functions:\nx +y +sin(x)\nexp(x+y)-x -sqrt(y)\nJacobian at [x,y]=[1,2]:')
     var_names=['x','y', 'z']
     PAD=Parallelized_AD(fun=func,var=var_names)
