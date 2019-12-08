@@ -211,18 +211,33 @@ class Parallelized_AD:
     
     # Overloading comparison operators
     def __eq__(self, other):
+        '''
+        Here's a quick check to ensure our equality condition is working (and our forward
+        and reverse modes!).  If everything is in order, forward mode and reverse mode should
+        be equal.
+        
+        >>> func = ['_x + sin(_y)*_z', '_x + sin(_y)*exp(_z)']
+        >>> PAD = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
+        >>> PAD.get_Jacobian([1,2,3])
+        array([[ 1.        , -1.24844051,  0.90929743],
+               [ 1.        , -8.35853265, 18.26372704]])
+        >>> PAD.get_value([1,2,3])
+        array([ 3.72789228, 19.26372704])
+        >>> PAD2 = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
+        >>> PAD2.get_Jacobian([1,2,3], forward=True)
+        array([[ 1.        , -1.24844051,  0.90929743],
+               [ 1.        , -8.35853265, 18.26372704]])
+        >>> PAD2.get_value([1,2,3])
+        array([ 3.72789228, 19.26372704])
+        >>> PAD == PAD2
+        True
+        '''
         assert isinstance(other,Parallelized_AD)
-        if self.Jacobian is not None and other.Jacobian is not None and self.Jacobian == other.Jacobian:
+        if self.Jacobian is not None and other.Jacobian is not None and self.Jacobian.all() == other.Jacobian.all():
             return True
         return False
-    
-    def __ne__(self, other):
-        assert isinstance(other, Parallelized_AD)
-        if self.Jacobian is not None and other.Jacobian is not None and self.Jacobian == other.Jacobian:
-            return False
-        return True
+
    
-if __name__=='__main__':
-    
+if __name__=='__main__':   
     import doctest
     doctest.testmod()
