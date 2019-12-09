@@ -544,7 +544,7 @@ def rm_test_tanh():
     assert EF.Tanh(Test_Dual_Number_1).val == np.tanh(1) and EF.Tanh(Test_Dual_Number_1).der == 0
 def rm_test_Logistic():
     Test_Dual_Number_1 = DualNumber(1,Reverse=True)
-    assert EF.Lpgistic(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and EF.Logistic(Test_Dual_Number_1).der == 0
+    assert EF.Logistic(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and EF.Logistic(Test_Dual_Number_1).der == 0
 
 rm_test_overload_add()
 rm_test_overload_add_types()
