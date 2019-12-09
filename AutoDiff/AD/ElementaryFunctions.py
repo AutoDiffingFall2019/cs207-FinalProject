@@ -35,9 +35,9 @@ def Tan(x):
     if data_type_check(x) == 0:
         if x._rev:
             z=DualNumber(np.tan(x._val),Reverse=True)
-            x.children.append(((1+np.tan(x._val)*np.tan(x._val)),z))
+            x.children.append(((1/np.cos(x.val)**2),z))
             return z
-        return DualNumber(np.tan(x._val),(1+np.tan(x._val)*np.tan(x._val))*x._der)
+        return DualNumber(np.tan(x._val),(1/np.cos(x.val)**2)*x._der)
     else:
         return DualNumber(np.tan(x),0)
 
