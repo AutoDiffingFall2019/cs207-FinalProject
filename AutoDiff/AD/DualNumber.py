@@ -557,4 +557,4 @@ if __name__ =="__main__":
     # f=round(x,2)
     # print(f.val,f.der)
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod()

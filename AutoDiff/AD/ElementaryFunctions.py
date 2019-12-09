@@ -1,7 +1,7 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from AD.DualNumber import DualNumber
+from DualNumber import DualNumber
 import numpy as np
 
 def Sin(x):
@@ -292,6 +292,6 @@ if __name__ =="__main__":
     #print('value of dz/dy = x evaluated at x=0.5, y=4.2: {}\nReverse method of our implementation: {}'.format(0.5, y.der))
 
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod()
     
     
