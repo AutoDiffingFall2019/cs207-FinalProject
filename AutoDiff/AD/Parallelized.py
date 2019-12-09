@@ -5,8 +5,8 @@ Created on Tue Dec  3 01:08:10 2019
 
 """
 import numpy as np
-from DualNumber_with_Reverse import DualNumber
-import ElementaryFunctions_with_reverse as EF
+from DualNumber import DualNumber
+import ElementaryFunctions as EF
 
 class Parallelized_AD:
     """
@@ -106,6 +106,25 @@ class Parallelized_AD:
             assert isinstance(fun,str)
             self.function=[self.function] if isinstance(self.function,str) else self.function
             self.function.append(fun)
+        
+    def add_var(self,var):
+        """
+        DESCRIPTION
+        =======
+        A class method to add variables to an existing Parallelized_AD object.  For example:
+        >>> PAD = Parallelized_AD(fun=['_x**_y + sin(_x)'],var=['x','y'])
+        >>> PAD.add_function('_z')
+        >>> PAD.add_var('z')
+        >>> print(PAD.function)
+        ['_x**_y + sin(_x)', '_z']
+        >>> print(PAD.varname)
+        ['x', 'y', 'z']
+        
+        Assert conditions ensure input is a string
+        """
+        assert isinstance(var,str)
+        self.varname=[self.varname] if isinstance(self.varname,str) else self.varname
+        self.varname.append(var)
 
             
     def get_Jacobian(self,loc,forward=False):
