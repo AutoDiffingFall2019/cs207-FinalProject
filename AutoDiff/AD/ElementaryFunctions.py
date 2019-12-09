@@ -1,7 +1,7 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber import DualNumber
+from AD.DualNumber import DualNumber
 import numpy as np
 
 def Sin(x):
