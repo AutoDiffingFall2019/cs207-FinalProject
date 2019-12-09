@@ -48,19 +48,17 @@ class DualNumber():
     Value: 2.30
     """
 
-
-
     def __init__(self, real, dual=1,Reverse=False):
-        #print(type(real))
+        #print(real)
         assert (isinstance(real, int) or isinstance(real, float)), "Check the type of real!"
         assert (isinstance(dual, float) or isinstance(dual, int)), "Check the type of dual!"
         self._val = real
         self._der = dual
-        self._rev=False
+        self._rev=Reverse
         if Reverse is True:
             self._der = None
             self.children = []
-            self._rev=True #Working on reverse mode
+            self._rev=True
     @property
     def val(self):
         return self._val
@@ -132,9 +130,10 @@ class DualNumber():
                 self.children.append((other.val, z))
                 other.children.append((self.val, z)) 
                 return z
-            val2 = self.val * other.val
-            der2 = self.der * other.val + self.val * other.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = self.val * other.val
+                der2 = self.der * other.val + self.val * other.der
+                return DualNumber(val2, der2)
         except AttributeError:
             assert(isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
@@ -164,19 +163,21 @@ class DualNumber():
                 z = DualNumber(self.val - other.val,Reverse=True)
                 self.children.append((1, z))
                 other.children.append((-1, z))
-                return z            
-            val2 = self.val - other.val
-            der2 = self.der - other.der
-            return DualNumber(val2, der2)
+                return z  
+            else:
+                val2 = self.val - other.val
+                der2 = self.der - other.der
+                return DualNumber(val2, der2)
         except AttributeError:
             assert(isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
                 z = DualNumber(self._val - other,Reverse=True)
                 self.children.append((1, z))
                 return z 
-            val2 = self.val - other
-            der2 = self.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = self.val - other
+                der2 = self.der
+                return DualNumber(val2, der2)
 
     def __rsub__(self, other):
         '''
@@ -190,19 +191,20 @@ class DualNumber():
                 self.children.append((-1, z))
                 other.children.append((1, z))
                 return z                
-            
-            val2 = other.val - self.val
-            der2 = other.der - self.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = other.val - self.val
+                der2 = other.der - self.der
+                return DualNumber(val2, der2)
         except AttributeError:
             assert(isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
                 z = DualNumber(other - self.val,Reverse=True)
                 self.children.append((-1, z))
                 return z
-            val2 = other - self.val
-            der2 = -self.der
-            return DualNumber(val2, der2)
+            else:
+                val2 = other - self.val
+                der2 = -self.der
+                return DualNumber(val2, der2)
 
     def __truediv__(self, other):
         '''
@@ -215,19 +217,21 @@ class DualNumber():
                 z = DualNumber(self.val / other.val,Reverse=True)
                 self.children.append((1/other.val , z))
                 other.children.append((-self.val/(other.val*other.val) , z))
-                return z                  
-            val2 = self.val / other.val
-            der2 = (-self.val * other.der + self.der*other.val)/(other.val*other.val)
-            return DualNumber(val2, der2)
+                return z 
+            else:                 
+                val2 = self.val / other.val
+                der2 = (-self.val * other.der + self.der*other.val)/(other.val*other.val)
+                return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
                 z = DualNumber(self.val / other,Reverse=True)
                 self.children.append((1/other , z))
                 return z
-            val2 = self.val / other
-            der2 = self.der / other
-            return DualNumber(val2, der2)
+            else:
+                val2 = self.val / other
+                der2 = self.der / other
+                return DualNumber(val2, der2)
 
     def __rtruediv__(self, other):
         '''
@@ -265,10 +269,11 @@ class DualNumber():
                 z = DualNumber(self.val ** other.val,Reverse=True)
                 self.children.append(((self.val ** other.val)*other.val/self.val , z))
                 other.children.append(((self.val ** other.val)*np.log(self.val), z))
-                return z                 
-            val2 = self.val ** other.val
-            der2 = val2*(other.val/self.val*self.der+other.der*np.log(self.val))
-            return DualNumber(val2, der2)
+                return z      
+            else:
+                val2 = self.val ** other.val
+                der2 = val2*(other.val/self.val*self.der+other.der*np.log(self.val))
+                return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
@@ -291,10 +296,11 @@ class DualNumber():
                 z = DualNumber(other.val ** self.val,Reverse=True)
                 other.children.append(((other.val ** self.val)*self.val/other.val , z))
                 self.children.append(((other.val ** self.val)*np.log(other.val), z))
-                return z                
-            val2 = other.val ** self.val
-            der2 = val2*(self.val/other.val*other.der+self.der*np.log(other.val))
-            return DualNumber(val2, der2)
+                return z   
+            else:                
+                val2 = other.val ** self.val
+                der2 = val2*(self.val/other.val*other.der+self.der*np.log(other.val))
+                return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if self._rev:
@@ -316,9 +322,10 @@ class DualNumber():
             z = DualNumber(self.val,Reverse=True)
             self.children.append((1, z))
             return z
-        val2 = self.val
-        der2 = self.der
-        return DualNumber(val2, der2)
+        else:
+            val2 = self.val
+            der2 = self.der
+            return DualNumber(val2, der2)
 
     def __neg__(self):
         '''
@@ -329,10 +336,11 @@ class DualNumber():
         if self._rev:
             z = DualNumber(-self.val,Reverse=True)
             self.children.append((-1, z))
-            return z        
-        val2 = -self.val
-        der2 = -self.der
-        return DualNumber(val2, der2)
+            return z    
+        else:
+            val2 = -self.val
+            der2 = -self.der
+            return DualNumber(val2, der2)
 
     def __abs__(self):
         '''
@@ -347,13 +355,13 @@ class DualNumber():
             else:
                 self.children.append((-1, z))
             return z                
-        
-        val2 = abs(self.val)
-        if self.val >= 0:
-            der2 = self.der
         else:
-            der2 = -1 * self.der
-        return DualNumber(val2, der2)
+            val2 = abs(self.val)
+            if self.val >= 0:
+                der2 = self.der
+            else:
+                der2 = -1 * self.der
+            return DualNumber(val2, der2)
 
     def __round__(self, n=None):
         '''
@@ -365,10 +373,106 @@ class DualNumber():
             z = DualNumber(round(self.val, n),Reverse=True)
             self.children.append((1, z))
             return z    
+        else:
+            val2 = round(self.val, n)
+            der2 = round(self.der, n)
+            return DualNumber(val2, der2)
         
-        val2 = round(self.val, n)
-        der2 = round(self.der, n)
-        return DualNumber(val2, der2)
+     
+    # Overloading comparison operators
+    def __eq__(self, other):
+        '''
+        >>> DualNumber(-5,-1)==DualNumber(-5,-1)
+        True
+        >>> DualNumber(-5,Reverse=True)==DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert isinstance(other,DualNumber)
+        if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
+            return True
+        if self._rev and other._rev and self.val == other.val:
+            return True
+        return False
+
+    def __ne__(self, other):
+        '''
+        >>> DualNumber(-5,-1)!=DualNumber(-5,-2)
+        True
+        >>> DualNumber(-5,Reverse=True)!=DualNumber(-5,Reverse=True)
+        False
+        '''
+        assert isinstance(other, DualNumber)
+        if not self._rev and not other._rev and self.val == other.val and self.der == other.der :
+            return False
+        if self._rev and other._rev and self.val == other.val:
+            return False
+        return True
+
+    def __lt__(self, other):
+        '''
+        >>> DualNumber(-5,-1) < DualNumber(-4,-2)
+        True
+        >>> DualNumber(-5,Reverse=True) < DualNumber(-4,Reverse=True)
+        True
+        '''
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val < other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val < other:
+                return True
+
+    def __le__(self, other):
+        '''
+        >>> DualNumber(-5,-1) <= DualNumber(-5,-2)
+        True
+        >>> DualNumber(-5,Reverse=True) <= DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val <= other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val <= other:
+                return True
+            
+        return False
+
+    def __ge__(self, other):
+        '''
+        >>> DualNumber(-5,-1) >= -6
+        True
+        >>> DualNumber(-5,Reverse=True) >= DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val >= other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val >= other:
+                return True
+            
+        return False
+
+    def __gt__(self, other):
+        '''
+        >>> DualNumber(5,-1) > DualNumber(-5,-2)
+        True
+        >>> DualNumber(5,Reverse=True) > DualNumber(-5,Reverse=True)
+        True
+        '''
+        assert (isinstance(other, DualNumber) or float(other))
+        if isinstance(other,DualNumber):
+            if self.val > other.val:
+                return True
+        if isinstance(float(other), float):
+            if self.val > other:
+                return True
+            
+        return False
 if __name__ =="__main__":
     # x=DualNumber(-2.578,-1.2345)
     # y=DualNumber(3,1)
@@ -377,4 +481,4 @@ if __name__ =="__main__":
     # print(f.val,f.der)
     import doctest
     doctest.testmod()
-
+    
