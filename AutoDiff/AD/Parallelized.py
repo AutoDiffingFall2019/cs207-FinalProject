@@ -5,8 +5,8 @@ Created on Tue Dec  3 01:08:10 2019
 
 """
 import numpy as np
-from AD.DualNumber import DualNumber
-import AD.ElementaryFunctions as EF
+from DualNumber import DualNumber
+import ElementaryFunctions as EF
 
 class Parallelized_AD:
     """

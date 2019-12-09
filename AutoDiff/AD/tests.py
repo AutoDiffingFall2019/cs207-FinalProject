@@ -214,11 +214,6 @@ def test_cos():
     Test_Dual_Number_1 = 1
     assert EF.Cos(Test_Dual_Number_1).val == np.cos(1) and EF.Cos(Test_Dual_Number_1).der == 0
 
-def test_tan():
-    Test_Dual_Number_1 = DualNumber(1)
-    assert EF.Tan(Test_Dual_Number_1).val == np.tan(1) and EF.Tan(Test_Dual_Number_1).der == 1 / np.cos(1)**2
-    Test_Dual_Number_1 = 1
-    assert EF.Tan(Test_Dual_Number_1).val == np.tan(1) and EF.Tan(Test_Dual_Number_1).der == 0
 
 def test_exp():
     Test_Dual_Number_1 = DualNumber(1)
