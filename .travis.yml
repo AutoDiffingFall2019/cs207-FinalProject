@@ -1,0 +1,12 @@
+language: python
+python:      # current default Python on Travis CI
+  - "3.7"
+before_install:
+    - pip install pytest pytest-cov
+    - pip install coveralls
+    - pip install codecov
+script:
+    - python -m pytest --doctest-modules --cov=. --cov-report term-missing
+after_success:
+    - coveralls
+    - codecov
