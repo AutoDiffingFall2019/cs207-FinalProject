@@ -5,8 +5,8 @@ Created on Tue Dec  3 01:08:10 2019
 
 """
 import numpy as np
-from DualNumber_with_reverse import DualNumber
-import ElementaryFunctions_with_reverse as EF
+from DualNumber import DualNumber
+import ElementaryFunctions as EF
 
 class Parallelized_AD:
     """
@@ -31,7 +31,7 @@ class Parallelized_AD:
     RETURNS
     ========
     Parallelized_AD: An instance with methods such as get_Jacobian() to get the value of the Jacobian
-    at a certain point.  The user can also add functions to the current list of funnctions with the 
+    at a certain point.  The user can also add functions to the current list of functions with the 
     add_function() method.
     
     
@@ -90,7 +90,7 @@ class Parallelized_AD:
     def value(self):
         return self._value
         
-    def add_function(self,fun=None):
+    def add_function(self,fun):
         """
         DESCRIPTION
         =======
@@ -102,15 +102,28 @@ class Parallelized_AD:
         
         Assert conditions ensure input is a string
         """
-        if fun:
-            assert isinstance(fun,str)
-            self.function=[self.function] if isinstance(self.function,str) else self.function
-            self.function.append(fun)
+        assert isinstance(fun,str)
+        self.function=[self.function] if isinstance(self.function,str) else self.function
+        self.function.append(fun)
             
-    def specify_variables(self,Var=None):
-        if Var:
-            assert isinstance(Var,(str,list))
-            self.variable=[Var] if isinstance(Var,str) else Var
+    def add_var(self,var):
+        """
+        DESCRIPTION
+        =======
+        A class method to add variables to an existing Parallelized_AD object.  For example:
+        >>> PAD = Parallelized_AD(fun=['_x**_y + sin(_x)'],var=['x','y'])
+        >>> PAD.add_function('_z')
+        >>> PAD.add_var('z')
+        >>> print(PAD.function)
+        ['_x**_y + sin(_x)', '_z']
+        >>> print(PAD.varname)
+        ['x', 'y', 'z']
+        
+        Assert conditions ensure input is a string
+        """
+        assert isinstance(var,str)
+        self.varname=[self.varname] if isinstance(self.varname,str) else self.varname
+        self.varname.append(var)
             
     def get_Jacobian(self,loc,forward=False):
         """
@@ -124,7 +137,8 @@ class Parallelized_AD:
         forward argument specifies whether reverse (False) or forward (True) mode
         is used
         """
-        assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
+
+        assert len(loc)==len(self.varname) 
         self._Jacobian=np.zeros((len(self.function),len(self.varname)))
         
         # for each function, if forward, do forward mode calculation, else do reverse
@@ -141,10 +155,8 @@ class Parallelized_AD:
                     self._Jacobian[i,j]=element.der
             # similarly, if reverse, carry out reverse mode
             else:
-                if len(loc) == len(self.varname):
-                    self.variable=[DualNumber(value,Reverse=True) for value in loc]
-                else:
-                    self.variable=[DualNumber(value,Reverse=True) for value in loc[0]]
+                
+                self.variable=[DualNumber(value,Reverse=True) for value in loc]
                 translated_fun=self.preprocess(fun)
                 element=eval(translated_fun)
                 element.set_der(1)
@@ -160,13 +172,13 @@ class Parallelized_AD:
         doctests for details on usage.  User inputs location of vector-valued function,
         and get_value returns the value at the specified location.
         
-        >>> PAD = Parallelized_AD(fun=['_x * arcsine(_y*_z)+_x'], var=['x', 'y', 'z'])
+        >>> PAD = Parallelized_AD(fun=['_x * arcSin(_y*_z)+_x'], var=['x', 'y', 'z'])
         >>> print(PAD.get_value([0.4,0.2,1]))
         [0.48054317]
         >>> print(PAD.get_Jacobian([0.4,0.2,1]))
         [[1.20135792 0.40824829 0.08164966]]
         """
-        assert (len(loc)==len(self.varname) or loc.shape[1] == len(self.varname))
+        assert len(loc)==len(self.varname)
         self._value=np.zeros((len(self.function)))
         
         # for each function, if forward, do forward mode calculation, else do reverse
@@ -195,58 +207,29 @@ class Parallelized_AD:
         >>> print(PAD.preprocess(PAD.function[0]))
         EF.Sin(self.variable[0])
         """
-        dictionary={'exp(':'EF.Exp(',
-                    'sin(':'EF.Sin(',
-                    'cos(':'EF.Cos(',
+        dictionary={'sin(':'EF.Sin(',
                     'tan(':'EF.Tan(',
-                    'log(':'EF.Log(',
-                    'arcsine(':'EF.ArcSin(',
-                    'arccosi(':'EF.ArcCos(',
-                    'arctang(':'EF.ArcTan(',
-                    'sqrt(':'EF.Sqrt(',
+                    'cos(':'EF.Cos(',
+                    'exp(':'EF.Exp(',
                     'power(':'EF.Power(',
-                    'logit(':'EF.L(',
+                    'log(':'EF.Log(',
+                    'arcSin(':'EF.ArcSin(',
+                    'arcCos(':'EF.ArcCos(',
+                    'arcTan(':'EF.ArcTan(',
+                    'sqrt(':'EF.Sqrt(',
                     'sinh(':'EF.Sinh(',
                     'cosh(':'EF.Cosh(',
-                    'tanh(':'EF.Tanh('}
+                    'tanh(':'EF.Tanh(',
+                    'logit(':'EF.L('}
         for key,item in dictionary.items():
             string=string.replace(key,item)    
         for i,name in enumerate(self.varname):
             string=string.replace('_' + name,f'self.variable[{i}]')
 
         return string
-    
-    # Overloading comparison operators
-    def __eq__(self, other):
-        '''
-        Here's a quick check to ensure our equality condition is working (and our forward
-        and reverse modes!).  If everything is in order, forward mode and reverse mode should
-        be equal.
-        
-        >>> func = ['_x + sin(_y)*_z', '_x + sin(_y)*exp(_z)']
-        >>> PAD = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
-        >>> PAD.get_Jacobian([1,2,3])
-        array([[ 1.        , -1.24844051,  0.90929743],
-               [ 1.        , -8.35853265, 18.26372704]])
-        >>> PAD.get_value([1,2,3])
-        array([ 3.72789228, 19.26372704])
-        >>> PAD2 = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
-        >>> PAD2.get_Jacobian([1,2,3], forward=True)
-        array([[ 1.        , -1.24844051,  0.90929743],
-               [ 1.        , -8.35853265, 18.26372704]])
-        >>> PAD2.get_value([1,2,3])
-        array([ 3.72789228, 19.26372704])
-        >>> PAD == PAD2
-        True
-        '''
-        assert isinstance(other,Parallelized_AD)
-        if self.Jacobian is not None and other.Jacobian is not None and self.Jacobian.all() == other.Jacobian.all():
-            return True
-        return False
-
    
 if __name__=='__main__':   
+    
     import doctest
-    doctest.testmod()
-    #PAD = Parallelized_AD(fun=['_x * arcsine(_y*_z)+_x'], var=['x', 'y', 'z'])
-    #print(PAD.get_value([9,2,1]))
+    doctest.testmod(verbose=True)
+    

@@ -1,5 +1,8 @@
-from DualNumber_with_reverse import DualNumber
-import ElementaryFunctions_with_reverse as EF
+#!/anaconda3/bin/python
+# -*- coding: utf-8 -*-
+
+from DualNumber import DualNumber
+import ElementaryFunctions as EF
 from Parallelized import Parallelized_AD
 import numpy as np
 
