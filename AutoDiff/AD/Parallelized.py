@@ -51,7 +51,7 @@ class Parallelized_AD:
         
     EXAMPLES
     =========
-    >>> Parallelized_AD(fun=['_x**_y + logit(_x+_y) + _z'],var=['x','y', 'z']).get_Jacobian([0.5,0.25,1])
+    >>> Parallelized_AD(fun=['_x**_y + logistic(_x+_y) + _z'],var=['x','y', 'z']).get_Jacobian([0.5,0.25,1])
     array([[ 0.6383432 , -0.36496999,  1.        ]])
     >>> func = ['_x + sin(_y)*_z', '_x + sin(_y)*exp(_z)']
     >>> PAD = Parallelized_AD(fun = func, var = ['x', 'y', 'z'])
@@ -220,7 +220,7 @@ class Parallelized_AD:
                     'sinh(':'EF.Sinh(',
                     'cosh(':'EF.Cosh(',
                     'tanh(':'EF.Tanh(',
-                    'logit(':'EF.L('}
+                    'logistic(':'EF.Logistic('}
         for key,item in dictionary.items():
             string=string.replace(key,item)    
         for i,name in enumerate(self.varname):

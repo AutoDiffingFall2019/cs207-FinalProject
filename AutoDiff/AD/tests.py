@@ -295,11 +295,11 @@ def test_tanh():
     Test_Dual_Number_1 = 1
     assert EF.Tanh(Test_Dual_Number_1).val == np.tanh(1) and EF.Tanh(Test_Dual_Number_1).der == 0
 
-def test_L():
+def test_Logistic():
     Test_Dual_Number_1 = DualNumber(1)
-    assert EF.L(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and round(EF.L(Test_Dual_Number_1).der,8) == round(np.exp(-1) / (1+np.exp(-1))**2,8)
+    assert EF.Logistic(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and round(EF.Logistic(Test_Dual_Number_1).der,8) == round(np.exp(-1) / (1+np.exp(-1))**2,8)
     Test_Dual_Number_1 = 1
-    assert EF.L(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and EF.L(Test_Dual_Number_1).der == 0
+    assert EF.Logistic(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and EF.Logistic(Test_Dual_Number_1).der == 0
 
 def test_data_type_check():
     x = 'x'
@@ -321,7 +321,7 @@ test_Sqrt()
 test_sinh()      
 test_cosh()
 test_tanh()
-test_L()
+test_Logistic()
 test_data_type_check()
 
 # Reverse Mode tests
@@ -542,9 +542,9 @@ def rm_test_cosh():
 def rm_test_tanh():
     Test_Dual_Number_1 = DualNumber(1,Reverse=True)
     assert EF.Tanh(Test_Dual_Number_1).val == np.tanh(1) and EF.Tanh(Test_Dual_Number_1).der == 0
-def rm_test_L():
+def rm_test_Logistic():
     Test_Dual_Number_1 = DualNumber(1,Reverse=True)
-    assert EF.L(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and EF.L(Test_Dual_Number_1).der == 0
+    assert EF.Lpgistic(Test_Dual_Number_1).val == 1 / (1 + np.exp(-1)) and EF.Logistic(Test_Dual_Number_1).der == 0
 
 rm_test_overload_add()
 rm_test_overload_add_types()
@@ -586,7 +586,7 @@ rm_test_Sqrt()
 rm_test_sinh()      
 rm_test_cosh()
 rm_test_tanh()
-rm_test_L()
+rm_test_Logistic()
 
 
 

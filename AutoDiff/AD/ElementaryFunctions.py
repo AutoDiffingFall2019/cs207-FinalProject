@@ -249,12 +249,12 @@ def Tanh(x):
         return DualNumber((np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x)), 0)
 
 # Logistic functions
-def L(x):
+def Logistic(x):
     '''
-    >>> print(L(DualNumber(5,1)))
+    >>> print(Logistic(DualNumber(5,1)))
     Derivative: 0.01
     Value: 0.99
-    >>> print(L(DualNumber(5,Reverse = True)))
+    >>> print(Logistic(DualNumber(5,Reverse = True)))
     Derivative: 0.00
     Value: 0.99
     '''
