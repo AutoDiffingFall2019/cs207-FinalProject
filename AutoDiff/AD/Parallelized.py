@@ -5,7 +5,7 @@ Created on Tue Dec  3 01:08:10 2019
 
 """
 import numpy as np
-from DualNumber_with_reverse import DualNumber
+from DualNumber_with_Reverse import DualNumber
 import ElementaryFunctions_with_reverse as EF
 
 class Parallelized_AD:
@@ -106,11 +106,7 @@ class Parallelized_AD:
             assert isinstance(fun,str)
             self.function=[self.function] if isinstance(self.function,str) else self.function
             self.function.append(fun)
-            
-    def specify_variables(self,Var=None):
-        if Var:
-            assert isinstance(Var,(str,list))
-            self.variable=[Var] if isinstance(Var,str) else Var
+
             
     def get_Jacobian(self,loc,forward=False):
         """
@@ -160,7 +156,7 @@ class Parallelized_AD:
         doctests for details on usage.  User inputs location of vector-valued function,
         and get_value returns the value at the specified location.
         
-        >>> PAD = Parallelized_AD(fun=['_x * arcsine(_y*_z)+_x'], var=['x', 'y', 'z'])
+        >>> PAD = Parallelized_AD(fun=['_x * arcSin(_y*_z)+_x'], var=['x', 'y', 'z'])
         >>> print(PAD.get_value([0.4,0.2,1]))
         [0.48054317]
         >>> print(PAD.get_Jacobian([0.4,0.2,1]))
@@ -200,12 +196,12 @@ class Parallelized_AD:
                     'cos(':'EF.Cos(',
                     'tan(':'EF.Tan(',
                     'log(':'EF.Log(',
-                    'arcsine(':'EF.ArcSin(',
-                    'arccosi(':'EF.ArcCos(',
-                    'arctang(':'EF.ArcTan(',
+                    'arcSin(':'EF.ArcSin(',
+                    'arcCos(':'EF.ArcCos(',
+                    'arcTan(':'EF.ArcTan(',
                     'sqrt(':'EF.Sqrt(',
                     'power(':'EF.Power(',
-                    'logit(':'EF.L(',
+                    'logit(':'EF.Logistic(',
                     'sinh(':'EF.Sinh(',
                     'cosh(':'EF.Cosh(',
                     'tanh(':'EF.Tanh('}
@@ -247,6 +243,6 @@ class Parallelized_AD:
    
 if __name__=='__main__':   
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
     #PAD = Parallelized_AD(fun=['_x * arcsine(_y*_z)+_x'], var=['x', 'y', 'z'])
     #print(PAD.get_value([9,2,1]))

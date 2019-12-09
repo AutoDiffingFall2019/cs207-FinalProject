@@ -1,15 +1,16 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber_with_reverse import DualNumber
+from DualNumber_with_Reverse import DualNumber
 import numpy as np
-import math
-
 
 def Sin(x):
     '''
     >>> print(Sin(DualNumber(5,1)))
     Derivative: 0.28
+    Value: -0.96
+    >>> print(Sin(DualNumber(5,Reverse=True)))
+    Derivative: 0.00
     Value: -0.96
     '''
     if data_type_check(x) == 0:
@@ -27,6 +28,9 @@ def Tan(x):
     >>> print(Tan(DualNumber(5,1)))
     Derivative: 12.43
     Value: -3.38
+    >>> print(Tan(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
+    Value: -3.38
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -43,6 +47,9 @@ def Cos(x):
     >>> print(Cos(DualNumber(5,1)))
     Derivative: 0.96
     Value: 0.28
+    >>> print(Cos(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
+    Value: 0.28
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -57,6 +64,9 @@ def Exp(x):
     '''
     >>> print(Exp(DualNumber(5,1)))
     Derivative: 148.41
+    Value: 148.41
+    >>> print(Exp(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
     Value: 148.41
     '''
     if data_type_check(x) == 0:
@@ -73,6 +83,9 @@ def Power(x,n):
     >>> print(Power(DualNumber(5,1),2))
     Derivative: 10.00
     Value: 25.00
+    >>> print(Power(DualNumber(5,Reverse = True),2))
+    Derivative: 0.00
+    Value: 25.00
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -87,6 +100,9 @@ def Log(x, base = np.exp(1)):
     '''
     >>> print(Log(DualNumber(5,1)))
     Derivative: 0.20
+    Value: 1.61
+    >>> print(Log(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
     Value: 1.61
     '''
     if data_type_check(x) == 0:
@@ -104,9 +120,12 @@ def ArcSin(x):
     >>> print(ArcSin(DualNumber(0.5)))
     Derivative: 1.15
     Value: 0.52
+    >>> print(ArcSin(DualNumber(0.5,Reverse = True)))
+    Derivative: 0.00
+    Value: 0.52
     '''
-    if abs(x) >= math.pi:
-        raise ValueError('ArcSin is only defined on (-pi,pi)!')
+    if abs(x) >= 1:
+        raise ValueError('ArcSin is only defined on (-1,1)!')
     if data_type_check(x) == 0:
         if x._rev:
             z=DualNumber(np.arcsin(x._val),Reverse=True)
@@ -122,9 +141,12 @@ def ArcCos(x):
     >>> print(ArcCos(DualNumber(0.5)))
     Derivative: -1.15
     Value: 1.05
+    >>> print(ArcCos(DualNumber(0.5,Reverse = True)))
+    Derivative: 0.00
+    Value: 1.05
     '''
-    if abs(x) >= math.pi:
-        raise ValueError('ArcCos is only defined on (-pi,pi)!')
+    if abs(x) >= 1:
+        raise ValueError('ArcCos is only defined on (-1,1)!')
     if data_type_check(x) == 0:
         if x._rev:
             z=DualNumber(np.arccos(x._val),Reverse=True)
@@ -139,9 +161,10 @@ def ArcTan(x):
     >>> print(ArcTan(DualNumber(0.5)))
     Derivative: 0.80
     Value: 0.46
+    >>> print(ArcTan(DualNumber(0.5,Reverse = True)))
+    Derivative: 0.00
+    Value: 0.46
     '''
-    if abs(x) >= 1:
-        raise ValueError('ArcTan is only defined on (-1,1)!')
     if data_type_check(x) == 0:
         if x._rev:
             z=DualNumber(np.arctan(x._val),Reverse=True)
@@ -172,9 +195,12 @@ def Sqrt(x):
 # Hyperbolic functions
 def Sinh(x):
     '''
-    >>> print(Sinh(DualNumber(1,1)))
-    Derivative: 1.54
-    Value: 1.18
+    >>> print(Sinh(DualNumber(5,1)))
+    Derivative: 74.21
+    Value: 74.20
+    >>> print(Sinh(DualNumber(5,Reverse = True)))
+    Derivative: 0.00
+    Value: 74.20
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -187,9 +213,12 @@ def Sinh(x):
 
 def Cosh(x):
     '''
-    >>> print(Cosh(DualNumber(1,Reverse =  True)))
+    >>> print(Cosh(DualNumber(5,1)))
+    Derivative: 74.20
+    Value: 74.21
+    >>> print(Cosh(DualNumber(5,Reverse =  True)))
     Derivative: 0.00
-    Value: 1.54
+    Value: 74.21
     '''
     if data_type_check(x) == 0:
         if x._rev:
@@ -202,9 +231,12 @@ def Cosh(x):
 
 def Tanh(x):
     '''
-    >>> print(Tanh(DualNumber(0,1)))
-    Derivative: 1.00
-    Value: 0.00
+    >>> print(Tanh(DualNumber(5,1)))
+    Derivative: 0.00
+    Value: 1.00
+    >>> print(Tanh(DualNumber(5,Reverse =  True)))
+    Derivative: 0.00
+    Value: 1.00
     '''
     if data_type_check(x) == 0:
         Z = (np.exp(x._val)-np.exp(-x._val))/(np.exp(x._val)+np.exp(-x._val))
@@ -217,14 +249,15 @@ def Tanh(x):
         return DualNumber((np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x)), 0)
 
 # Logistic functions
-def L(x):
+def Logistic(x):
     '''
-    >>> print(L(DualNumber(0.5,Reverse = True)))
+    >>> print(Logistic(DualNumber(5,1)))
+    Derivative: 0.01
+    Value: 0.99
+    >>> print(Logistic(DualNumber(5,Reverse = True)))
     Derivative: 0.00
-    Value: 0.62
+    Value: 0.99
     '''
-    if abs(x) >= 1:
-        raise ValueError('Logit is only defined on (-1,1)!')
     if data_type_check(x) == 0:
         if x._rev:
             z=DualNumber(1/(1+np.exp(-x._val)),Reverse=True)
@@ -250,5 +283,15 @@ def data_type_check(x):
 
 
 if __name__ =="__main__":
+    #x = DualNumber(0.5,Reverse=True)
+    #y = DualNumber(4.2,Reverse=True)
+    #z = x * y + Sin(x)
+    #z.set_der(value=1.0)
+    #print('value of x*y + sin(x) evaluated at x=0.5, y=4.2: {}\nOur implementation gives: {}'.format(0.5 * 4.2 + np.sin(0.5), z.val))
+    #print('value of dz/dx = y + cos(x) evaluated at x=0.5, y=4.2: {}\nReverse method of our implementation: {}'.format(4.2 + np.cos(0.5), x.der))
+    #print('value of dz/dy = x evaluated at x=0.5, y=4.2: {}\nReverse method of our implementation: {}'.format(0.5, y.der))
+
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
+    
+    
