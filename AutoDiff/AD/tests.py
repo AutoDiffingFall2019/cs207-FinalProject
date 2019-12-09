@@ -305,7 +305,6 @@ def test_data_type_check():
     
 test_sin()      
 test_cos()
-test_tan()
 test_exp()
 test_Power()
 test_Log()
