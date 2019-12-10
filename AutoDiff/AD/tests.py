@@ -1,9 +1,9 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber import DualNumber
-import ElementaryFunctions as EF
-from Parallelized import Parallelized_AD
+from AD.DualNumber import DualNumber
+import AD.ElementaryFunctions as EF
+from AD.Parallelized import Parallelized_AD
 import numpy as np
 import pytest
 
@@ -214,11 +214,6 @@ def test_cos():
     Test_Dual_Number_1 = 1
     assert EF.Cos(Test_Dual_Number_1).val == np.cos(1) and EF.Cos(Test_Dual_Number_1).der == 0
 
-def test_tan():
-    Test_Dual_Number_1 = DualNumber(1)
-    assert EF.Tan(Test_Dual_Number_1).val == np.tan(1) and EF.Tan(Test_Dual_Number_1).der == 1 / np.cos(1)**2
-    Test_Dual_Number_1 = 1
-    assert EF.Tan(Test_Dual_Number_1).val == np.tan(1) and EF.Tan(Test_Dual_Number_1).der == 0
 
 def test_exp():
     Test_Dual_Number_1 = DualNumber(1)
@@ -310,7 +305,6 @@ def test_data_type_check():
     
 test_sin()      
 test_cos()
-test_tan()
 test_exp()
 test_Power()
 test_Log()
