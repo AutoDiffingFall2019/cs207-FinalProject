@@ -314,6 +314,8 @@ class DualNumber():
         Value: 25.00
         '''
         try:
+            if self.val == 0 and other.val == 0:
+                raise AttributeError('Cannot have base and exponent both be 0!')
             if self._rev:
                 z = DualNumber(self.val ** other.val,Reverse=True)
                 self.children.append(((self.val ** other.val)*other.val/self.val , z))
@@ -325,6 +327,8 @@ class DualNumber():
                 return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
+            if self.val == 0 and other == 0:
+                raise AttributeError('Cannot have base and exponent both be 0!')
             if self._rev:
                 z = DualNumber(self.val ** other,Reverse=True)
                 self.children.append(((self.val ** other)*other/self.val , z))
@@ -348,6 +352,8 @@ class DualNumber():
         '''
         try:
             if self._rev:
+                if other.val <= 0:
+                    raise AttributeError('Base must be >0!')
                 z = DualNumber(other.val ** self.val,Reverse=True)
                 other.children.append(((other.val ** self.val)*self.val/other.val , z))
                 self.children.append(((other.val ** self.val)*np.log(other.val), z))
@@ -361,7 +367,7 @@ class DualNumber():
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
             if other <= 0:
-                    raise AttributeError('Base must be >0!')
+                    raise ValueError('Base must be >0!')
             if self._rev:
                 z = DualNumber(other ** self.val,Reverse=True)
                 self.children.append((other ** self.val * np.log(other), z))
