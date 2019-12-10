@@ -9,7 +9,7 @@ with open("requirements.txt", "r") as rt:
 
 setuptools.setup(
     name="autodiffing",
-    version="0.0.7",
+    version="0.0.8",
     
     install_requires=install_reqs,
     
