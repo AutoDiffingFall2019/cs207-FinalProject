@@ -1,9 +1,9 @@
 #!/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
-from DualNumber import DualNumber
-import ElementaryFunctions as EF
-from Parallelized import Parallelized_AD
+from AD.DualNumber import DualNumber
+import AD.ElementaryFunctions as EF
+from AD.Parallelized import Parallelized_AD
 import numpy as np
 import pytest
 
