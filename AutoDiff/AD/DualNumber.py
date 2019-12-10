@@ -352,12 +352,16 @@ class DualNumber():
                 other.children.append(((other.val ** self.val)*self.val/other.val , z))
                 self.children.append(((other.val ** self.val)*np.log(other.val), z))
                 return z   
-            else:                
+            else:
+                if other.val <= 0:
+                    raise AttributeError('Base must be >0!')
                 val2 = other.val ** self.val
                 der2 = val2*(self.val/other.val*other.der+self.der*np.log(other.val))
                 return DualNumber(val2, der2)
         except AttributeError:
             assert (isinstance(other, float) or isinstance(other, int)), "Check the type of objects in function!"
+            if other <= 0:
+                    raise AttributeError('Base must be >0!')
             if self._rev:
                 z = DualNumber(other ** self.val,Reverse=True)
                 self.children.append((other ** self.val * np.log(other), z))
@@ -558,5 +562,7 @@ if __name__ =="__main__":
     # f=round(x,2)
     # print(f.val,f.der)
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod()
+    
+
     
