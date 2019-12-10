@@ -3,7 +3,7 @@
 
 
 # cs207-FinalProject
-Final project for CS207
+Final project for CS207 Fall 2019
 Group number 21
 
 Shuvom Sadhuka, Silin Zou, Edwin Chng, Sijie Sun
