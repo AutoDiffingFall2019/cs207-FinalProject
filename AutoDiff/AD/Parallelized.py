@@ -156,6 +156,8 @@ class Parallelized_AD:
                     self._Jacobian[i,j]=element.der
             # similarly, if reverse, carry out reverse mode
             else:
+                # FIRST initialize the variable -- outside the loop for each of the 
+                # partials
                 if len(loc) == len(self.varname):
                     self.variable=[DualNumber(value,Reverse=True) for value in loc]
                 else:
